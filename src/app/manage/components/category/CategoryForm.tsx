@@ -1,14 +1,29 @@
 'use client';
 import HTTP_CODE from '@/constants/http-code';
 import fetchApi from '@/utils/fetchApi';
-import { FormControl, FormLabel, Input, Button, VStack, Card, CardHeader, CardBody, Heading } from '@chakra-ui/react';
+import {
+  FormControl,
+  FormLabel,
+  Input,
+  Button,
+  VStack,
+  Card,
+  CardHeader,
+  CardBody,
+  Heading,
+  FormErrorMessage,
+  useToast,
+} from '@chakra-ui/react';
 import { FormEvent, useState } from 'react';
 
 export default function CategoryForm() {
-  const [categoryName, setCategoryName] = useState('');
+  const [categoryName, setCategoryName] = useState<string>('');
+  const [error, setError] = useState<string>('');
+  const toast = useToast();
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
+    setError('');
 
     const dto = {
       name: categoryName,
@@ -26,11 +41,27 @@ export default function CategoryForm() {
     const data = await response.json();
 
     if (response.status != HTTP_CODE.CREATED) {
-      console.log(data.message.toString());
+      setError(data.message.toString());
+      toast({
+        title: 'Erreur création',
+        description: data.message.toString(),
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
       return;
     }
 
-    console.log('Created');
+    setError('');
+    setCategoryName('');
+
+    toast({
+      title: 'Catégorie crée',
+      description: 'Vous pouvez maintenant utiliser votre catégorie',
+      status: 'success',
+      duration: 3000,
+      isClosable: true,
+    });
   };
 
   return (
@@ -38,7 +69,7 @@ export default function CategoryForm() {
       <CardBody>
         <form onSubmit={handleSubmit}>
           <VStack spacing={4} align='stretch'>
-            <FormControl id='categoryName'>
+            <FormControl id='categoryName' isInvalid={error !== ''}>
               <FormLabel>Nouvelle catégorie</FormLabel>
               <Input
                 type='text'
@@ -46,6 +77,7 @@ export default function CategoryForm() {
                 onChange={(e) => setCategoryName(e.target.value)}
                 placeholder='Saisissez le nom de la catégorie'
               />
+              <FormErrorMessage>{error}</FormErrorMessage>
             </FormControl>
             <Button type='submit' colorScheme='teal'>
               Créer

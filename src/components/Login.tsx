@@ -31,7 +31,7 @@ export default function Login() {
 
     console.log(dto);
 
-    const user = await fetchApi('/auth/login', {
+    const response = await fetchApi('/auth/login', {
       method: 'POST',
       credentials: 'include',
       headers: {
@@ -40,6 +40,8 @@ export default function Login() {
       body: JSON.stringify(dto),
     });
 
+    const user = await response.json();
+    // implementer un auth context avec dedans des infos user
     console.log(user);
   };
 
