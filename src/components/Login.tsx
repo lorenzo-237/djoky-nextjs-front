@@ -1,6 +1,6 @@
 'use client';
 
-import fetchApi from '@/utils/fetchApi';
+import useAuth from '@/hooks/useAuth';
 import {
   Flex,
   Box,
@@ -14,12 +14,15 @@ import {
   Heading,
   Text,
   useColorModeValue,
+  useToast,
 } from '@chakra-ui/react';
 import { FormEvent, useState } from 'react';
 
 export default function Login() {
   const [username, setUsername] = useState<string>('lorenzo');
   const [password, setPassword] = useState<string>('lorenzo');
+  const toast = useToast();
+  const { auth, login } = useAuth();
 
   const handleLogin = async (event: FormEvent) => {
     event.preventDefault();
@@ -29,20 +32,20 @@ export default function Login() {
       password: password,
     };
 
-    console.log(dto);
+    const user = await login(dto);
 
-    const response = await fetchApi('/auth/login', {
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(dto),
-    });
+    if (user.error) {
+      toast({
+        title: 'Non autorisé',
+        description: user.message,
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }
 
-    const user = await response.json();
-    // implementer un auth context avec dedans des infos user
-    console.log(user);
+    console.log(user.message);
   };
 
   return (

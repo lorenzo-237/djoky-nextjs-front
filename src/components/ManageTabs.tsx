@@ -1,7 +1,7 @@
 'use client';
 import { Tabs, TabList, TabPanels, Tab, TabPanel, Box, Stack } from '@chakra-ui/react';
-import CategoryForm from './../components/category/CategoryForm';
-import CategoryTable from './../components/category/CategoryTable';
+import CategoryForm from './category/CategoryForm';
+import CategoryTable from './category/CategoryTable';
 
 export default function ManageTabs({ categories }: { categories: any[] }) {
   return (

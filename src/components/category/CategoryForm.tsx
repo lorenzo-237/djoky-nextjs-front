@@ -1,6 +1,6 @@
 'use client';
 import HTTP_CODE from '@/constants/http-code';
-import fetchApi from '@/utils/fetchApi';
+import { fetchApi } from '@/utils/fetch/client';
 import {
   FormControl,
   FormLabel,
@@ -8,9 +8,7 @@ import {
   Button,
   VStack,
   Card,
-  CardHeader,
   CardBody,
-  Heading,
   FormErrorMessage,
   useToast,
 } from '@chakra-ui/react';
@@ -18,12 +16,12 @@ import { FormEvent, useState } from 'react';
 
 export default function CategoryForm() {
   const [categoryName, setCategoryName] = useState<string>('');
-  const [error, setError] = useState<string>('');
+  const [error, setError] = useState<string | null>(null);
   const toast = useToast();
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
-    setError('');
+    setError(null);
 
     const dto = {
       name: categoryName,
@@ -52,7 +50,7 @@ export default function CategoryForm() {
       return;
     }
 
-    setError('');
+    setError(null);
     setCategoryName('');
 
     toast({
@@ -69,7 +67,7 @@ export default function CategoryForm() {
       <CardBody>
         <form onSubmit={handleSubmit}>
           <VStack spacing={4} align='stretch'>
-            <FormControl id='categoryName' isInvalid={error !== ''}>
+            <FormControl id='categoryName' isInvalid={error !== null}>
               <FormLabel>Nouvelle catégorie</FormLabel>
               <Input
                 type='text'

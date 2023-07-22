@@ -1,4 +1,4 @@
-export default function fetchApi(url: string, init?: RequestInit): Promise<Response> {
+export function fetchApi(url: string, init?: RequestInit): Promise<Response> {
   let formatUrl = url;
 
   if (url.startsWith('/')) {

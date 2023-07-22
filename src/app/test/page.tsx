@@ -1,5 +1,5 @@
 import React from 'react';
-import CategoryTable from '../manage/components/category/CategoryTable';
+import CategoryTable from '../../components/category/CategoryTable';
 import getAllCategories from '@/db/getAllCategories';
 
 export default async function Test() {

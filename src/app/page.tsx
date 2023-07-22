@@ -1,9 +1,17 @@
-import Login from '@/components/Login';
+import { HomeComponent } from '@/components/Home';
+import { getSession } from '@/utils/fetch/server';
+import { Metadata } from 'next';
 
-export default function Home() {
+export const metadata: Metadata = {
+  title: 'Djoky',
+};
+
+export default async function Home() {
+  const session = await getSession();
+
   return (
     <>
-      <Login />
+      <HomeComponent session={session} />
     </>
   );
 }
