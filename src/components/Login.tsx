@@ -17,12 +17,14 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { FormEvent, useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function Login() {
+  const router = useRouter();
   const [username, setUsername] = useState<string>('lorenzo');
   const [password, setPassword] = useState<string>('lorenzo');
   const toast = useToast();
-  const { auth, login } = useAuth();
+  const { login } = useAuth();
 
   const handleLogin = async (event: FormEvent) => {
     event.preventDefault();
@@ -44,8 +46,7 @@ export default function Login() {
       });
       return;
     }
-
-    console.log(user.message);
+    router.refresh();
   };
 
   return (
