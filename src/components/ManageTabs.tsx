@@ -5,14 +5,14 @@ import CategoryForm from './category/CategoryForm';
 import CategoryTable from './category/CategoryTable';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { init } from '@/app/reducers/category.slice';
+import { initData } from '@/app/reducers/category.slice';
 
 export default function ManageTabs({ categoryResponse }: { categoryResponse: CategoryResponse }) {
   const dispatch = useDispatch();
 
   useEffect(() => {
     console.log('dispatch category');
-    dispatch(init(categoryResponse));
+    dispatch(initData(categoryResponse));
   }, [categoryResponse, dispatch]);
 
   return (

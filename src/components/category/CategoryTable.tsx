@@ -13,17 +13,25 @@ import {
   CardBody,
   IconButton,
   HStack,
+  useDisclosure,
 } from '@chakra-ui/react';
 import { EditIcon, CheckIcon } from '@chakra-ui/icons';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '@/app/store';
+import { setCurrentUpdate } from '@/app/reducers/category.slice';
+import { useRef } from 'react';
+import CategoryUpdateModal from './category-update-modal';
 
 export default function CategoryTable() {
-  const { count, rows } = useSelector((state: RootState) => state.category);
+  const { count, rows } = useSelector((state: RootState) => state.category.data);
+  const dispatch = useDispatch();
 
-  const handleEdit = (id: number) => {
-    // Logique pour modifier l'élément avec l'ID donné
-    console.log("Modifier l'élément avec l'ID :", id);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const updateBtnRef = useRef(null);
+
+  const handleEdit = (id: number, name: string) => {
+    dispatch(setCurrentUpdate({ id, name }));
+    onOpen();
   };
 
   const handleValidate = (id: number) => {
@@ -53,11 +61,12 @@ export default function CategoryTable() {
                 <Td>
                   <HStack spacing={1}>
                     <IconButton
+                      ref={updateBtnRef}
                       variant='outline'
                       aria-label='Modifier'
                       title={`Modifier la catégorie : ${category.name}`}
                       icon={<EditIcon />}
-                      onClick={() => handleEdit(category.id)}
+                      onClick={() => handleEdit(category.id, category.name)}
                       size='sm'
                       colorScheme='blue'
                     />
@@ -79,6 +88,7 @@ export default function CategoryTable() {
           </Tbody>
         </Table>
       </CardBody>
+      <CategoryUpdateModal finalRef={updateBtnRef} isOpen={isOpen} onClose={onClose} />
     </Card>
   );
 }

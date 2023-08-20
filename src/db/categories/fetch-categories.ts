@@ -1,7 +1,7 @@
 import { fetchApi } from '@/utils/fetch/server';
 
 export default async function fetchCategories(): Promise<CategoryResponse | undefined> {
-  const response = await fetchApi('/categories', { cache: 'no-store' });
+  const response = await fetchApi('/categories/all', { cache: 'no-store' });
 
   if (!response.ok) return undefined;
 

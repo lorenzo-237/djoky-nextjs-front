@@ -12,7 +12,7 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { FormEvent, useState } from 'react';
-import createNewCatory from '@/db/create-category';
+import { createNewCategory } from '@/db/categories';
 import { useDispatch } from 'react-redux';
 import { addCategory } from '@/app/reducers/category.slice';
 
@@ -27,7 +27,7 @@ export default function CategoryForm() {
     setError(null);
 
     try {
-      const category = await createNewCatory(categoryName);
+      const category = await createNewCategory(categoryName);
 
       setError(null);
       setCategoryName('');
