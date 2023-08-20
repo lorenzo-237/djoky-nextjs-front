@@ -1,2 +1,2 @@
 export * from './fetchServerSide';
-export * from './getSession';
+export * from './get-session';

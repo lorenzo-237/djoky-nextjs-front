@@ -1,2 +1,2 @@
-export * from './fetchClientSide';
-export * from './fetchPostApi';
+export * from './fetch-api';
+export * from './fetch-post-api';

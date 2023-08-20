@@ -1,6 +1,5 @@
 'use client';
-import HTTP_CODE from '@/constants/http-code';
-import { fetchApi } from '@/utils/fetch/client';
+
 import {
   FormControl,
   FormLabel,
@@ -13,53 +12,45 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { FormEvent, useState } from 'react';
+import createNewCatory from '@/db/create-category';
+import { useDispatch } from 'react-redux';
+import { addCategory } from '@/app/reducers/category.slice';
 
 export default function CategoryForm() {
   const [categoryName, setCategoryName] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
   const toast = useToast();
+  const dispatch = useDispatch();
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
     setError(null);
 
-    const dto = {
-      name: categoryName,
-    };
+    try {
+      const category = await createNewCatory(categoryName);
 
-    const response = await fetchApi('/categories', {
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(dto),
-    });
+      setError(null);
+      setCategoryName('');
 
-    const data = await response.json();
+      toast({
+        title: 'Catégorie crée',
+        description: 'Vous pouvez maintenant utiliser votre catégorie',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
 
-    if (response.status != HTTP_CODE.CREATED) {
-      setError(data.message.toString());
+      dispatch(addCategory(category));
+    } catch (error: any) {
+      setError(error.message.toString());
       toast({
         title: 'Erreur création',
-        description: data.message.toString(),
+        description: error.message.toString(),
         status: 'error',
         duration: 3000,
         isClosable: true,
       });
-      return;
     }
-
-    setError(null);
-    setCategoryName('');
-
-    toast({
-      title: 'Catégorie crée',
-      description: 'Vous pouvez maintenant utiliser votre catégorie',
-      status: 'success',
-      duration: 3000,
-      isClosable: true,
-    });
   };
 
   return (

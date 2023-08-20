@@ -7,3 +7,17 @@ type User = {
   lastname: string;
   role: Role;
 };
+
+type Category = {
+  id: number;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
+  createdUserId: number;
+  isPending: boolean;
+};
+
+type CategoryResponse = {
+  count: number;
+  rows: Category[];
+};

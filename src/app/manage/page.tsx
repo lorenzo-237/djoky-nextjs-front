@@ -1,12 +1,12 @@
 import ManageTabs from '@/components/ManageTabs';
-import getAllCategories from '@/db/getAllCategories';
+import fetchCategories from '@/db/fetch-categories';
 
 export default async function Manage() {
-  const categories = await getAllCategories();
+  const categoryRes = await fetchCategories();
 
-  if (!categories) {
+  if (!categoryRes) {
     return <p>Nope</p>;
   }
 
-  return <ManageTabs categories={categories} />;
+  return <ManageTabs categoryResponse={categoryRes} />;
 }

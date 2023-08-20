@@ -1,3 +1,5 @@
+'use client';
+
 import { SessionDjoky } from '@/constants';
 import HTTP_CODE from '@/constants/http-code';
 import { fetchPostApi } from '@/utils/fetch/client';
@@ -20,8 +22,8 @@ const AuthContext = createContext<AuthContextType>({
   }),
 });
 
-export const AuthProvider = ({ children }: { children: JSX.Element }) => {
-  const [auth, setAuth] = useState<SessionDjoky | null>(null);
+export const AuthProvider = ({ session, children }: { session: SessionDjoky | null; children: JSX.Element }) => {
+  const [auth, setAuth] = useState<SessionDjoky | null>(session);
 
   const login = async (userDto: { username: string; password: string }) => {
     try {

@@ -15,8 +15,12 @@ import {
   HStack,
 } from '@chakra-ui/react';
 import { EditIcon, CheckIcon } from '@chakra-ui/icons';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/app/store';
 
-export default function CategoryTable({ categories }: { categories: any[] }) {
+export default function CategoryTable() {
+  const { count, rows } = useSelector((state: RootState) => state.category);
+
   const handleEdit = (id: number) => {
     // Logique pour modifier l'élément avec l'ID donné
     console.log("Modifier l'élément avec l'ID :", id);
@@ -30,7 +34,7 @@ export default function CategoryTable({ categories }: { categories: any[] }) {
   return (
     <Card>
       <CardHeader>
-        <Heading size='md'>Liste des catégories</Heading>
+        <Heading size='md'>Liste des catégories ({count} éléments)</Heading>
       </CardHeader>
       <CardBody>
         <Table variant='simple' size='sm'>
@@ -42,7 +46,7 @@ export default function CategoryTable({ categories }: { categories: any[] }) {
             </Tr>
           </Thead>
           <Tbody>
-            {categories.map((category: any) => (
+            {rows.map((category: Category) => (
               <Tr key={category.id}>
                 <Td>{category.name}</Td>
                 <Td color={`${category.isPending ? 'red.500' : ''}`}>{category.isPending ? 'Oui' : 'Non'}</Td>
@@ -51,6 +55,7 @@ export default function CategoryTable({ categories }: { categories: any[] }) {
                     <IconButton
                       variant='outline'
                       aria-label='Modifier'
+                      title={`Modifier la catégorie : ${category.name}`}
                       icon={<EditIcon />}
                       onClick={() => handleEdit(category.id)}
                       size='sm'
@@ -60,6 +65,7 @@ export default function CategoryTable({ categories }: { categories: any[] }) {
                       <IconButton
                         variant='outline'
                         aria-label='Valider'
+                        title={`Valider la catégorie : ${category.name}`}
                         icon={<CheckIcon />}
                         onClick={() => handleValidate(category.id)}
                         size='sm'

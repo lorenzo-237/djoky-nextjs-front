@@ -1,9 +1,20 @@
 'use client';
+
 import { Tabs, TabList, TabPanels, Tab, TabPanel, Box, Stack } from '@chakra-ui/react';
 import CategoryForm from './category/CategoryForm';
 import CategoryTable from './category/CategoryTable';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { init } from '@/app/reducers/category.slice';
 
-export default function ManageTabs({ categories }: { categories: any[] }) {
+export default function ManageTabs({ categoryResponse }: { categoryResponse: CategoryResponse }) {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    console.log('dispatch category');
+    dispatch(init(categoryResponse));
+  }, [categoryResponse, dispatch]);
+
   return (
     <Box>
       <Tabs>
@@ -18,7 +29,7 @@ export default function ManageTabs({ categories }: { categories: any[] }) {
           <TabPanel>
             <Stack spacing={4}>
               <CategoryForm />
-              <CategoryTable categories={categories} />
+              <CategoryTable />
             </Stack>
           </TabPanel>
           <TabPanel>

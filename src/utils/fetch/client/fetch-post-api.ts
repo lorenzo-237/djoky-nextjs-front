@@ -1,4 +1,4 @@
-import { fetchApi } from './fetchClientSide';
+import { fetchApi } from './fetch-api';
 
 export function fetchPostApi(url: string, dto?: any): Promise<Response> {
   return fetchApi(url, {
