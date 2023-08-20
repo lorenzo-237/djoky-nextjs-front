@@ -15,12 +15,13 @@ import {
   HStack,
   useDisclosure,
 } from '@chakra-ui/react';
-import { EditIcon, CheckIcon } from '@chakra-ui/icons';
+import { EditIcon, CheckIcon, TimeIcon } from '@chakra-ui/icons';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '@/app/store';
-import { setCurrentUpdate } from '@/app/reducers/category.slice';
+import { pending, setCurrentUpdate, validate } from '@/app/reducers/category.slice';
 import { useRef } from 'react';
 import CategoryUpdateModal from './category-update-modal';
+import { pendingCategory, validateCategory } from '@/db/categories';
 
 export default function CategoryTable() {
   const { count, rows } = useSelector((state: RootState) => state.category.data);
@@ -34,9 +35,22 @@ export default function CategoryTable() {
     onOpen();
   };
 
-  const handleValidate = (id: number) => {
-    // Logique pour supprimer l'élément avec l'ID donné
-    console.log("Retirer en attente sur l'élément avec l'ID :", id);
+  const handleValidate = async (id: number) => {
+    try {
+      await validateCategory(id);
+      dispatch(validate(id));
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handlePending = async (id: number) => {
+    try {
+      await pendingCategory(id);
+      dispatch(pending(id));
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -70,7 +84,7 @@ export default function CategoryTable() {
                       size='sm'
                       colorScheme='blue'
                     />
-                    {category.isPending && (
+                    {category.isPending ? (
                       <IconButton
                         variant='outline'
                         aria-label='Valider'
@@ -79,6 +93,16 @@ export default function CategoryTable() {
                         onClick={() => handleValidate(category.id)}
                         size='sm'
                         colorScheme='green'
+                      />
+                    ) : (
+                      <IconButton
+                        variant='outline'
+                        aria-label='Valider'
+                        title={`Mettre en attente la catégorie : ${category.name}`}
+                        icon={<TimeIcon />}
+                        onClick={() => handlePending(category.id)}
+                        size='sm'
+                        colorScheme='red'
                       />
                     )}
                   </HStack>

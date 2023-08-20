@@ -47,9 +47,25 @@ export const categorySlice = createSlice({
         name: '',
       };
     },
+    validate: (state, action: PayloadAction<number>) => {
+      console.log('validate category');
+      const id = action.payload;
+
+      state.data.rows = state.data.rows.map((category) =>
+        category.id === id ? { ...category, isPending: false } : category
+      );
+    },
+    pending: (state, action: PayloadAction<number>) => {
+      console.log('pending category');
+      const id = action.payload;
+
+      state.data.rows = state.data.rows.map((category) =>
+        category.id === id ? { ...category, isPending: true } : category
+      );
+    },
   },
 });
 
-export const { initData, addCategory, setCurrentUpdate, update } = categorySlice.actions;
+export const { initData, addCategory, setCurrentUpdate, update, validate, pending } = categorySlice.actions;
 
 export default categorySlice.reducer;

@@ -1,8 +1,7 @@
 'use client';
 
 import { Tabs, TabList, TabPanels, Tab, TabPanel, Box, Stack } from '@chakra-ui/react';
-import CategoryForm from './category/CategoryForm';
-import CategoryTable from './category/CategoryTable';
+import { CategoryForm, CategoryTable } from './category';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { initData } from '@/app/reducers/category.slice';
