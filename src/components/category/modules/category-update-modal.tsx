@@ -2,7 +2,7 @@
 
 import { Button, FormControl, FormLabel, Input } from '@chakra-ui/react';
 import React, { useEffect, useRef, useState } from 'react';
-import { DefaultModal } from '../structure';
+import { DefaultModal } from '../../structure';
 import { RootState } from '@/app/store';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateCategory } from '@/db/categories';
