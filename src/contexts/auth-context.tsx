@@ -12,6 +12,7 @@ export type AuthContextType = {
     error: boolean;
     message: any;
   }>;
+  logout: () => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextType>({
@@ -20,6 +21,7 @@ const AuthContext = createContext<AuthContextType>({
     error: false,
     message: '',
   }),
+  logout: async () => {},
 });
 
 export const AuthProvider = ({ session, children }: { session: SessionDjoky | null; children: JSX.Element }) => {
@@ -43,7 +45,22 @@ export const AuthProvider = ({ session, children }: { session: SessionDjoky | nu
     }
   };
 
-  return <AuthContext.Provider value={{ auth, login }}>{children}</AuthContext.Provider>;
+  const logout = async () => {
+    try {
+      const response = await fetchPostApi('/auth/logout');
+
+      if (response.status != HTTP_CODE.OK) {
+        const errorData: ErrorApiMessage = await response.json();
+        throw new Error(errorData.message);
+      }
+
+      setAuth(null);
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  return <AuthContext.Provider value={{ auth, login, logout }}>{children}</AuthContext.Provider>;
 };
 
 export default AuthContext;

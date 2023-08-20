@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { Providers } from './providers';
-import Sidebar from '@/components/Sidebar';
+import { Sidebar } from '@/components/sidebar';
 import { getSession } from '@/utils/fetch/server';
 
 export const metadata: Metadata = {
