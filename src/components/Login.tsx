@@ -15,6 +15,8 @@ import {
   Text,
   useColorModeValue,
   useToast,
+  Image,
+  Center,
 } from '@chakra-ui/react';
 import { FormEvent, useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -60,6 +62,10 @@ export default function Login() {
           </Text>
         </Stack>
         <Box rounded={'lg'} bg={useColorModeValue('white', 'gray.700')} boxShadow={'lg'} p={8}>
+          <Center>
+            <Image src='djoky_logo.png' boxSize='100px' borderRadius='full' alt='app logo' />
+          </Center>
+
           <form onSubmit={handleLogin}>
             <Stack spacing={4}>
               <FormControl id='username'>
