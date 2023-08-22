@@ -15,8 +15,8 @@ import {
 } from '@chakra-ui/react';
 import { FormEvent, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addGroup } from '@/app/reducers/group.slice';
-import { createNewGroup } from '@/db/group';
+import { addGroup } from '@/reducers/group.slice';
+import { createNewGroup } from '@/db/groups';
 import { RootState } from '@/app/store';
 
 export default function GroupForm() {
@@ -85,7 +85,7 @@ export default function GroupForm() {
             <FormControl id='groupName' isInvalid={error !== null}>
               <Stack spacing={3}>
                 <FormLabel>Nouveau groupe</FormLabel>
-                <Select placeholder='Chosir une catégorie' onChange={handleSelectCategory}>
+                <Select placeholder='Chosir une catégorie' value={categoryId} onChange={handleSelectCategory}>
                   {categories.rows.map((category) => (
                     <option key={category.id} value={category.id}>
                       {category.name}

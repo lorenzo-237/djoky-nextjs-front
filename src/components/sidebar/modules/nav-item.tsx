@@ -1,5 +1,6 @@
 import { Link, Flex, FlexProps, Icon } from '@chakra-ui/react';
 import { IconType } from 'react-icons';
+import NextLink from 'next/link';
 
 interface NavItemProps extends FlexProps {
   icon: IconType;
@@ -10,7 +11,7 @@ export default function NavItem({ url, icon, children, ...rest }: NavItemProps) 
   const isLogoutLink = url === '/logout';
 
   return (
-    <Link href={url} style={{ textDecoration: 'none' }} _focus={{ boxShadow: 'none' }}>
+    <Link href={url} as={NextLink} style={{ textDecoration: 'none' }} _focus={{ boxShadow: 'none' }}>
       <Flex
         align='center'
         p='4'

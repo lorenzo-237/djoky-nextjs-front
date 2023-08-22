@@ -14,7 +14,7 @@ import {
 import { FormEvent, useState } from 'react';
 import { createNewCategory } from '@/db/categories';
 import { useDispatch } from 'react-redux';
-import { addCategory } from '@/app/reducers/category.slice';
+import { addCategory } from '@/reducers/category.slice';
 
 export default function CategoryForm() {
   const [categoryName, setCategoryName] = useState<string>('');

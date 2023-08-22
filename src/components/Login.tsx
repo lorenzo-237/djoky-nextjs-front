@@ -47,6 +47,7 @@ export default function Login() {
       return;
     }
     router.refresh();
+    router.replace('/');
   };
 
   return (

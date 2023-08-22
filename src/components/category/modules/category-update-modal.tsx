@@ -6,7 +6,8 @@ import { DefaultModal } from '../../structure';
 import { RootState } from '@/app/store';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateCategory } from '@/db/categories';
-import { update } from '@/app/reducers/category.slice';
+import { update } from '@/reducers/category.slice';
+import { udpdateCategory } from '@/reducers/group.slice';
 
 export interface CategoryUpdateModalProps {
   isOpen: boolean;
@@ -28,6 +29,7 @@ export default function CategoryUpdateModal({ isOpen, onClose, finalRef }: Categ
     try {
       const category = await updateCategory(id, categoryName);
       dispatch(update({ id: category.id, name: category.name }));
+      dispatch(udpdateCategory({ categoryId: category.id, categoryName: category.name }));
       onClose();
     } catch (error) {
       console.error(error);

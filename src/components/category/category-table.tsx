@@ -18,7 +18,7 @@ import {
 import { EditIcon, CheckIcon, TimeIcon } from '@chakra-ui/icons';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '@/app/store';
-import { pending, setCurrentUpdate, validate } from '@/app/reducers/category.slice';
+import { pending, setCurrentUpdate, validate } from '@/reducers/category.slice';
 import { pendingCategory, validateCategory } from '@/db/categories';
 import { useRef } from 'react';
 import { CategoryUpdateModal } from './modules';

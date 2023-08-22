@@ -24,20 +24,19 @@ export const categorySlice = createSlice({
   initialState,
   reducers: {
     initData: (state, action: PayloadAction<CategoryResponse>) => {
-      console.log('init data category');
-      state.data = action.payload;
+      if (action.payload) {
+        console.log('\x1b[32m%s\x1b[0m', '[INIT] Categories');
+        state.data = action.payload;
+      }
     },
     addCategory: (state, action: PayloadAction<Category>) => {
-      console.log('add category');
       state.data.count++;
       state.data.rows.push(action.payload);
     },
     setCurrentUpdate: (state, action: PayloadAction<UpdateDto>) => {
-      console.log(`set current category [${action.payload.id}:${action.payload.name}]`);
       state.currentUpdate = action.payload;
     },
     update: (state, action: PayloadAction<{ id: number; name: string }>) => {
-      console.log('update category');
       const { id, name } = action.payload;
 
       state.data.rows = state.data.rows.map((category) => (category.id === id ? { ...category, name } : category));
@@ -48,7 +47,6 @@ export const categorySlice = createSlice({
       };
     },
     validate: (state, action: PayloadAction<number>) => {
-      console.log('validate category');
       const id = action.payload;
 
       state.data.rows = state.data.rows.map((category) =>
@@ -56,7 +54,6 @@ export const categorySlice = createSlice({
       );
     },
     pending: (state, action: PayloadAction<number>) => {
-      console.log('pending category');
       const id = action.payload;
 
       state.data.rows = state.data.rows.map((category) =>

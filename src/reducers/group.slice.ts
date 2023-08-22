@@ -4,7 +4,10 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 export interface UpdateDto {
   id: number;
   name: string;
-  categoryId: number;
+  category: {
+    id: number;
+    name: string;
+  };
 }
 
 export interface GroupState {
@@ -17,7 +20,10 @@ const initialState: GroupState = {
   currentUpdate: {
     id: 0,
     name: '',
-    categoryId: 0,
+    category: {
+      id: 0,
+      name: '',
+    },
   },
 };
 
@@ -26,32 +32,29 @@ export const groupSlice = createSlice({
   initialState,
   reducers: {
     initData: (state, action: PayloadAction<GroupResponse>) => {
-      console.log('init data group');
-      state.data = action.payload;
+      if (action.payload) {
+        console.log('\x1b[32m%s\x1b[0m', '[INIT] Groups');
+        state.data = action.payload;
+      }
     },
     addGroup: (state, action: PayloadAction<Group>) => {
-      console.log('add group');
       state.data.count++;
       state.data.rows.push(action.payload);
     },
     setCurrentUpdate: (state, action: PayloadAction<UpdateDto>) => {
-      console.log(`set current group [${action.payload.id}:${action.payload.name}]`);
       state.currentUpdate = action.payload;
     },
-    update: (state, action: PayloadAction<{ id: number; name: string; categoryId: number }>) => {
-      console.log('update group');
-      const { id, name, categoryId } = action.payload;
+    update: (state, action: PayloadAction<UpdateDto>) => {
+      const { id, name, category } = action.payload;
 
       state.data.rows = state.data.rows.map((group) =>
         group.id === id
           ? {
               ...group,
-              ...{
-                name,
-                category: {
-                  id: categoryId,
-                  name: group.category.name,
-                },
+              name,
+              category: {
+                id: category.id,
+                name: category.name,
               },
             }
           : group
@@ -60,24 +63,40 @@ export const groupSlice = createSlice({
       state.currentUpdate = {
         id: 0,
         name: '',
-        categoryId: 0,
+        category: {
+          id: 0,
+          name: '',
+        },
       };
     },
     validate: (state, action: PayloadAction<number>) => {
-      console.log('validate group');
       const id = action.payload;
 
       state.data.rows = state.data.rows.map((group) => (group.id === id ? { ...group, isPending: false } : group));
     },
     pending: (state, action: PayloadAction<number>) => {
-      console.log('pending group');
       const id = action.payload;
 
       state.data.rows = state.data.rows.map((group) => (group.id === id ? { ...group, isPending: true } : group));
     },
+    udpdateCategory: (state, action: PayloadAction<{ categoryId: number; categoryName: string }>) => {
+      const { categoryId, categoryName } = action.payload;
+
+      state.data.rows = state.data.rows.map((group) =>
+        group.category.id === categoryId
+          ? {
+              ...group,
+              category: {
+                ...group.category,
+                name: categoryName,
+              },
+            }
+          : group
+      );
+    },
   },
 });
 
-export const { initData, addGroup, setCurrentUpdate, update, validate, pending } = groupSlice.actions;
+export const { initData, addGroup, setCurrentUpdate, update, validate, pending, udpdateCategory } = groupSlice.actions;
 
 export default groupSlice.reducer;

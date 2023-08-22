@@ -2,6 +2,9 @@ import type { Metadata } from 'next';
 import { Providers } from './providers';
 import { Sidebar } from '@/components/sidebar';
 import { getSession } from '@/utils/fetch/server';
+import fetchCategories from '@/db/categories/fetch-categories';
+import fetchGroups from '@/db/groups/fetch-groups';
+import { HomeComponent } from '@/components/Home';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -11,10 +14,16 @@ export const metadata: Metadata = {
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const session = await getSession();
 
+  console.log('server layout');
+  const categoryRes = !session ? null : await fetchCategories();
+  const groupRes = !session ? null : await fetchGroups();
+
   return (
     <html lang='fr'>
       <body>
-        <Providers session={session}>{session ? <Sidebar>{children}</Sidebar> : children}</Providers>
+        <Providers session={session} appContextType={{ categoryResponse: categoryRes, groupResponse: groupRes }}>
+          {session ? <Sidebar>{children}</Sidebar> : <HomeComponent />}
+        </Providers>
       </body>
     </html>
   );
