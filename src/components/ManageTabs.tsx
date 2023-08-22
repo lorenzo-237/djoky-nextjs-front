@@ -2,17 +2,25 @@
 
 import { Tabs, TabList, TabPanels, Tab, TabPanel, Box, Stack } from '@chakra-ui/react';
 import { CategoryForm, CategoryTable } from './category';
+import { GroupForm, GroupTable } from './group';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { initData } from '@/app/reducers/category.slice';
+import { initData as initCategory } from '@/app/reducers/category.slice';
+import { initData as initGroup } from '@/app/reducers/group.slice';
 
-export default function ManageTabs({ categoryResponse }: { categoryResponse: CategoryResponse }) {
+export type ManageTabsProps = {
+  categoryResponse: CategoryResponse;
+  groupResponse: GroupResponse;
+};
+
+export default function ManageTabs({ categoryResponse, groupResponse }: ManageTabsProps) {
   const dispatch = useDispatch();
 
   useEffect(() => {
     console.log('dispatch category');
-    dispatch(initData(categoryResponse));
-  }, [categoryResponse, dispatch]);
+    dispatch(initCategory(categoryResponse));
+    dispatch(initGroup(groupResponse));
+  }, [groupResponse, categoryResponse, dispatch]);
 
   return (
     <Box>
@@ -32,7 +40,10 @@ export default function ManageTabs({ categoryResponse }: { categoryResponse: Cat
             </Stack>
           </TabPanel>
           <TabPanel>
-            <p>Groupes</p>
+            <Stack spacing={4}>
+              <GroupForm />
+              <GroupTable />
+            </Stack>
           </TabPanel>
           <TabPanel>
             <p>Exercices</p>

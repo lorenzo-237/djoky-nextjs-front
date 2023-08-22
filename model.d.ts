@@ -21,3 +21,21 @@ type CategoryResponse = {
   count: number;
   rows: Category[];
 };
+
+type Group = {
+  id: number;
+  name: string;
+  isPending: boolean;
+  createdAt: string;
+  updatedAt: string;
+  createdUserId: number;
+  category: {
+    id: number;
+    name: string;
+  };
+};
+
+type GroupResponse = {
+  count: number;
+  rows: Group[];
+};

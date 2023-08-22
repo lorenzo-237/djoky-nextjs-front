@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 import categoryReducer from './reducers/category.slice';
+import groupReducer from './reducers/group.slice';
 
 export const store = configureStore({
   reducer: {
     category: categoryReducer,
+    group: groupReducer,
   },
 });
 
