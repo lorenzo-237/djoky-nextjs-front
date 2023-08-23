@@ -75,7 +75,12 @@ export default function GroupUpdateModal({ isOpen, onClose, finalRef }: GroupUpd
       <FormControl>
         <Stack spacing={3}>
           <FormLabel>Catégorie du groupe</FormLabel>
-          <Select placeholder='Chosir une catégorie' value={state.categoryId} onChange={handleSelectCategory}>
+          <Select
+            focusBorderColor='teal'
+            placeholder='Chosir une catégorie'
+            value={state.categoryId}
+            onChange={handleSelectCategory}
+          >
             {categories.rows.map((category) => (
               <option key={category.id} value={category.id}>
                 {category.name}
@@ -84,6 +89,7 @@ export default function GroupUpdateModal({ isOpen, onClose, finalRef }: GroupUpd
           </Select>
           <FormLabel>Nom du groupe</FormLabel>
           <Input
+            focusBorderColor='teal'
             ref={initialRef}
             placeholder='Saisissez le nom du groupe'
             value={state.name}

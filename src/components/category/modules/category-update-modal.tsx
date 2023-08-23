@@ -60,6 +60,7 @@ export default function CategoryUpdateModal({ isOpen, onClose, finalRef }: Categ
       <FormControl>
         <FormLabel>Nom</FormLabel>
         <Input
+          focusBorderColor='teal'
           ref={initialRef}
           placeholder='Saisissez le nom de la catégorie'
           value={categoryName}
