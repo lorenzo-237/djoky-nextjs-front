@@ -61,6 +61,7 @@ export default function CategoryForm() {
             <FormControl id='categoryName' isInvalid={error !== null}>
               <FormLabel>Nouvelle catégorie</FormLabel>
               <Input
+                focusBorderColor='teal'
                 type='text'
                 value={categoryName}
                 onChange={(e) => setCategoryName(e.target.value)}

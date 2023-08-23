@@ -3,6 +3,7 @@
 import { Tabs, TabList, TabPanels, Tab, TabPanel, Box, Stack } from '@chakra-ui/react';
 import { CategoryForm, CategoryTable } from './category';
 import { GroupForm, GroupTable } from './group';
+import { ExerciseForm, ExerciseTable } from './exercise';
 
 export interface ManageProps {}
 export default function ManageTabs() {
@@ -30,7 +31,10 @@ export default function ManageTabs() {
             </Stack>
           </TabPanel>
           <TabPanel>
-            <p>Exercices</p>
+            <Stack spacing={4}>
+              <ExerciseForm />
+              <ExerciseTable />
+            </Stack>
           </TabPanel>
           <TabPanel>
             <p>Utilisateurs</p>

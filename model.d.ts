@@ -39,3 +39,27 @@ type GroupResponse = {
   count: number;
   rows: Group[];
 };
+
+type Exercise = {
+  id: number;
+  name: string;
+  description: string;
+  createdAt: string;
+  updatedAt: string;
+  createdUserId: number;
+  isPending: boolean;
+  timed: boolean;
+  group: {
+    id: number;
+    name: string;
+    category: {
+      id: number;
+      name: string;
+    };
+  };
+};
+
+type ExerciseResponse = {
+  count: number;
+  rows: Exercise[];
+};

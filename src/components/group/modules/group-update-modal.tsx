@@ -7,6 +7,7 @@ import { RootState } from '@/app/store';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateGroup } from '@/db/groups';
 import { update } from '@/reducers/group.slice';
+import { refreshGroup } from '@/reducers/exercise.slice';
 
 export interface GroupUpdateModalProps {
   isOpen: boolean;
@@ -17,20 +18,22 @@ export interface GroupUpdateModalProps {
 export default function GroupUpdateModal({ isOpen, onClose, finalRef }: GroupUpdateModalProps) {
   const initialRef = useRef(null);
   const { id, name, category } = useSelector((state: RootState) => state.group.currentUpdate);
-  const [groupName, setGroupName] = useState<string>('');
-  const [groupCategory, setGroupCategory] = useState<{ id: number; name: string }>({ id: 0, name: '' });
+  const [state, setState] = useState({
+    name: '',
+    categoryId: 0,
+  });
   const dispatch = useDispatch();
   const categories = useSelector((state: RootState) => state.category.data);
 
   useEffect(() => {
-    setGroupName(name);
-    setGroupCategory(category);
+    setState({ name: name, categoryId: category.id });
   }, [name, category]);
 
   const handleUpdate = async () => {
     try {
-      const group = await updateGroup(id, groupName, groupCategory.id);
+      const group = await updateGroup(id, state.name, state.categoryId);
       dispatch(update({ id: group.id, name: group.name, category: group.category }));
+      dispatch(refreshGroup({ groupId: group.id, groupName: group.name }));
       onClose();
     } catch (error) {
       console.error(error);
@@ -63,7 +66,7 @@ export default function GroupUpdateModal({ isOpen, onClose, finalRef }: GroupUpd
       return;
     }
 
-    setGroupCategory({ id: selectedId, name: selectedItem.name });
+    setState({ ...state, categoryId: selectedItem.id });
   };
 
   return (
@@ -72,7 +75,7 @@ export default function GroupUpdateModal({ isOpen, onClose, finalRef }: GroupUpd
       <FormControl>
         <Stack spacing={3}>
           <FormLabel>Catégorie du groupe</FormLabel>
-          <Select placeholder='Chosir une catégorie' value={groupCategory.id} onChange={handleSelectCategory}>
+          <Select placeholder='Chosir une catégorie' value={state.categoryId} onChange={handleSelectCategory}>
             {categories.rows.map((category) => (
               <option key={category.id} value={category.id}>
                 {category.name}
@@ -83,8 +86,8 @@ export default function GroupUpdateModal({ isOpen, onClose, finalRef }: GroupUpd
           <Input
             ref={initialRef}
             placeholder='Saisissez le nom du groupe'
-            value={groupName}
-            onChange={(e) => setGroupName(e.target.value)}
+            value={state.name}
+            onChange={(e) => setState({ ...state, name: e.target.value })}
           />
         </Stack>
       </FormControl>

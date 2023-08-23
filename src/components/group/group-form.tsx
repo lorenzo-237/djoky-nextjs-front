@@ -85,7 +85,12 @@ export default function GroupForm() {
             <FormControl id='groupName' isInvalid={error !== null}>
               <Stack spacing={3}>
                 <FormLabel>Nouveau groupe</FormLabel>
-                <Select placeholder='Chosir une catégorie' value={categoryId} onChange={handleSelectCategory}>
+                <Select
+                  placeholder='Chosir une catégorie'
+                  value={categoryId}
+                  onChange={handleSelectCategory}
+                  focusBorderColor='teal'
+                >
                   {categories.rows.map((category) => (
                     <option key={category.id} value={category.id}>
                       {category.name}
@@ -93,6 +98,7 @@ export default function GroupForm() {
                   ))}
                 </Select>
                 <Input
+                  focusBorderColor='teal'
                   type='text'
                   value={groupName}
                   onChange={(e) => setGroupName(e.target.value)}

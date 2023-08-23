@@ -4,6 +4,7 @@ import { Sidebar } from '@/components/sidebar';
 import { getSession } from '@/utils/fetch/server';
 import fetchCategories from '@/db/categories/fetch-categories';
 import fetchGroups from '@/db/groups/fetch-groups';
+import fetchExercises from '@/db/exercises/fetch-exercises';
 import { HomeComponent } from '@/components/Home';
 
 export const metadata: Metadata = {
@@ -17,11 +18,15 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   console.log('server layout');
   const categoryRes = !session ? null : await fetchCategories();
   const groupRes = !session ? null : await fetchGroups();
+  const exerciseRes = !session ? null : await fetchExercises();
 
   return (
     <html lang='fr'>
       <body>
-        <Providers session={session} appContextType={{ categoryResponse: categoryRes, groupResponse: groupRes }}>
+        <Providers
+          session={session}
+          appContextType={{ categoryResponse: categoryRes, groupResponse: groupRes, exerciseResponse: exerciseRes }}
+        >
           {session ? <Sidebar>{children}</Sidebar> : <HomeComponent />}
         </Providers>
       </body>

@@ -79,7 +79,7 @@ export const groupSlice = createSlice({
 
       state.data.rows = state.data.rows.map((group) => (group.id === id ? { ...group, isPending: true } : group));
     },
-    udpdateCategory: (state, action: PayloadAction<{ categoryId: number; categoryName: string }>) => {
+    refreshCategory: (state, action: PayloadAction<{ categoryId: number; categoryName: string }>) => {
       const { categoryId, categoryName } = action.payload;
 
       state.data.rows = state.data.rows.map((group) =>
@@ -97,6 +97,6 @@ export const groupSlice = createSlice({
   },
 });
 
-export const { initData, addGroup, setCurrentUpdate, update, validate, pending, udpdateCategory } = groupSlice.actions;
+export const { initData, addGroup, setCurrentUpdate, update, validate, pending, refreshCategory } = groupSlice.actions;
 
 export default groupSlice.reducer;
