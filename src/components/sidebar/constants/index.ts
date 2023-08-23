@@ -1,5 +1,6 @@
 import { IconType } from 'react-icons';
-import { FiHome, FiTrendingUp, FiCompass, FiStar, FiSettings, FiLogOut } from 'react-icons/fi';
+import { FiTrendingUp, FiCompass, FiStar, FiSettings, FiLogOut } from 'react-icons/fi';
+import { FaDumbbell } from 'react-icons/fa';
 
 export interface LinkItemProps {
   name: string;
@@ -8,7 +9,7 @@ export interface LinkItemProps {
 }
 
 export const LinkItems: Array<LinkItemProps> = [
-  { name: 'Workouts', icon: FiHome, url: '#' },
+  { name: 'Workouts', icon: FaDumbbell, url: '/workouts' },
   { name: 'Evolution', icon: FiTrendingUp, url: '#' },
   { name: 'Gestion', icon: FiCompass, url: '/manage' },
   { name: 'Favourites', icon: FiStar, url: '#' },

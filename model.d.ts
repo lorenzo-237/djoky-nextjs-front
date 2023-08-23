@@ -63,3 +63,36 @@ type ExerciseResponse = {
   count: number;
   rows: Exercise[];
 };
+
+type Workout = {
+  id: number;
+  date: string;
+  description: string;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string;
+  isDeleted: boolean;
+  user: {
+    id: number;
+    firstname: string;
+    lastname: string;
+  };
+  exercises: {
+    id: number;
+    name: string;
+    description: string;
+    group: {
+      id: number;
+      name: string;
+      category: {
+        id: number;
+        name: string;
+      };
+    };
+  }[];
+};
+
+type WorkoutResponse = {
+  count: number;
+  rows: Workout[];
+};
