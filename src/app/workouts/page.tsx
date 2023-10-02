@@ -1,5 +1,5 @@
 import { WorkoutList } from '@/components/workout';
-import fetchSessionWorkout from '@/db/workouts/fetch-session-workout';
+import { fetchSessionWorkout } from '@/db/workouts';
 import React from 'react';
 
 export default async function WorkoutsPage() {

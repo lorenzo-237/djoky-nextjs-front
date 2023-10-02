@@ -64,6 +64,26 @@ type ExerciseResponse = {
   rows: Exercise[];
 };
 
+type WorkoutExercise = {
+  id: number;
+  name: string;
+  description: string;
+  group: {
+    id: number;
+    name: string;
+    category: {
+      id: number;
+      name: string;
+    };
+  };
+  assignedAt: string;
+  series: number;
+  repetitions: number;
+  time: number;
+  weight: number;
+  total: number;
+};
+
 type Workout = {
   id: number;
   date: string;
@@ -77,19 +97,7 @@ type Workout = {
     firstname: string;
     lastname: string;
   };
-  exercises: {
-    id: number;
-    name: string;
-    description: string;
-    group: {
-      id: number;
-      name: string;
-      category: {
-        id: number;
-        name: string;
-      };
-    };
-  }[];
+  exercises: WorkoutExercise[];
 };
 
 type WorkoutResponse = {
