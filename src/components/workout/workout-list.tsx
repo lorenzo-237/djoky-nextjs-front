@@ -1,14 +1,21 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { KawaiiResults } from './modules';
 import { FormControl, Input, FormLabel, Stack, Card, CardBody, Button, VStack } from '@chakra-ui/react';
 import { Search2Icon } from '@chakra-ui/icons';
 import fetchSessionWorkout from '@/db/workouts/client/fetch-session-workout';
 
-export type DateRangeType = {
+type DateRangeType = {
   min: string;
   max: string;
+};
+
+type PageFilterType = {
+  startDate: string;
+  endDate: string;
+  page: number;
+  pageSize: number;
 };
 
 // Formatage des dates au format "YYYY-MM-DD" pour les champs de date
@@ -19,31 +26,29 @@ const formatDate = (date: Date) => {
   return `${year}-${month}-${day}`;
 };
 
+const DEFAULT_PAGE_SIZE = 2;
+
 function WorkoutList() {
   const [data, setData] = useState<WorkoutResponse>({
+    page: 0,
+    pageSize: 0,
+    totalPage: 0,
     count: 0,
     rows: [],
   });
   const [dateRange, setDateRange] = useState<DateRangeType>({
-    min: '',
-    max: '',
+    min: formatDate(new Date(new Date().setDate(new Date().getDate() - 7))),
+    max: formatDate(new Date()),
   });
+  const [filter, setFilter] = useState<PageFilterType>({
+    startDate: '',
+    endDate: '',
+    page: 1,
+    pageSize: DEFAULT_PAGE_SIZE,
+  });
+  const [loading, setLoading] = useState<boolean>(false);
 
-  useEffect(() => {
-    const calculateDateRange = () => {
-      const today = new Date();
-      const sevenDaysAgo = new Date();
-      sevenDaysAgo.setDate(today.getDate() - 7);
-
-      setDateRange({
-        min: formatDate(sevenDaysAgo),
-        max: formatDate(today),
-      });
-    };
-
-    calculateDateRange();
-  }, []);
-
+  // handle form dates changes
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setDateRange((prevDateRange) => ({
@@ -52,14 +57,57 @@ function WorkoutList() {
     }));
   };
 
+  const fetchWorkouts = async (page: number, startDate: string, endDate: string) => {
+    try {
+      const { pageSize } = filter;
+      const fetchedData = await fetchSessionWorkout({
+        startDate,
+        endDate,
+        page,
+        pageSize,
+      });
+      setData(fetchedData);
+    } catch (error) {
+      throw error;
+    }
+  };
+
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
+
+    const newStartDate = dateRange.min;
+    const newEndDate = dateRange.max;
+
+    setFilter((prevFilter) => ({
+      ...prevFilter,
+      page: 1,
+      startDate: newStartDate,
+      endDate: newEndDate,
+    }));
+
     try {
-      const fetchedData = await fetchSessionWorkout();
-      setData(fetchedData);
+      await fetchWorkouts(1, newStartDate, newEndDate);
     } catch (error) {
       console.error("Erreur lors de la récupération des données de l'API:", error);
     }
+
+    setLoading(false);
+  };
+
+  const handlePageChange = async (newPage: number) => {
+    setLoading(true);
+    setFilter((prevFilter) => ({ ...prevFilter, page: newPage }));
+
+    const { startDate, endDate } = filter;
+
+    try {
+      await fetchWorkouts(newPage, startDate, endDate);
+    } catch (error) {
+      console.error("Erreur lors de la récupération des données de l'API:", error);
+    }
+
+    setLoading(false);
   };
 
   return (
@@ -70,23 +118,11 @@ function WorkoutList() {
             <Stack align='end' direction={['column', 'row']}>
               <FormControl flex={1}>
                 <FormLabel>Date Min</FormLabel>
-                <Input
-                  type='date'
-                  name='min'
-                  focusBorderColor='teal'
-                  value={dateRange.min}
-                  onChange={handleDateChange}
-                />
+                <Input type='date' name='min' colorScheme='blue' value={dateRange.min} onChange={handleDateChange} />
               </FormControl>
               <FormControl flex={1}>
                 <FormLabel>Date Max</FormLabel>
-                <Input
-                  type='date'
-                  name='max'
-                  focusBorderColor='teal'
-                  value={dateRange.max}
-                  onChange={handleDateChange}
-                />
+                <Input type='date' name='max' colorScheme='blue' value={dateRange.max} onChange={handleDateChange} />
               </FormControl>
               <Button
                 type='submit'
@@ -100,8 +136,57 @@ function WorkoutList() {
           </form>
         </CardBody>
       </Card>
-      <KawaiiResults data={data} />
+      <WorkoutsListAndPagination loading={loading} data={data} filter={filter} handlePageChange={handlePageChange} />
     </VStack>
+  );
+}
+
+function WorkoutsListAndPagination({
+  loading,
+  data,
+  filter,
+  handlePageChange,
+}: {
+  loading: boolean;
+  data: WorkoutResponse;
+  filter: PageFilterType;
+  handlePageChange: any;
+}) {
+  if (data.page === 0) {
+    return <p>Please make a search...</p>;
+  }
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
+  if (data.page < 0) {
+    return <p>Pas de résultats...</p>;
+  }
+
+  return (
+    <>
+      <p>Il y a {data.totalPage} page(s)</p>
+      <p>Vous êtes sur la page numéro {data.page}</p>
+      <p>Il y a {data.count} workout(s) en tout</p>
+      <KawaiiResults workouts={data.rows} />
+
+      <Button
+        colorScheme='blue'
+        onClick={() => handlePageChange(filter.page - 1)}
+        isDisabled={loading || filter.page <= 1}
+      >
+        Page précédente
+      </Button>
+
+      <Button
+        colorScheme='blue'
+        onClick={() => handlePageChange(filter.page + 1)}
+        isDisabled={loading || filter.page >= data.totalPage}
+      >
+        Page suivante
+      </Button>
+    </>
   );
 }
 

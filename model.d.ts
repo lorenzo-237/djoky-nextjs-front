@@ -101,6 +101,9 @@ type Workout = {
 };
 
 type WorkoutResponse = {
+  page: number;
+  pageSize: number;
+  totalPage: number;
   count: number;
   rows: Workout[];
 };

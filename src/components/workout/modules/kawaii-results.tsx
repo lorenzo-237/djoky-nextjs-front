@@ -12,31 +12,27 @@ function randomColorScheme() {
   return availableColorSchemes[randomIndex];
 }
 
-export type KawaiiProps = {
-  data: WorkoutResponse;
-};
-
-export default function KawaiiResults({ data }: KawaiiProps) {
+export default function KawaiiResults({ workouts }: { workouts: Workout[] }) {
   const displayedGroups = new Set();
 
   return (
     <VStack spacing={4} align='start'>
-      {data.rows.map((result) => (
-        <Card key={result.id} w='full'>
+      {workouts.map((workouts) => (
+        <Card key={workouts.id} w='full'>
           <CardBody>
             <HStack>
               <Badge colorScheme='teal' fontSize='md'>
-                {formatDateToCustomFormat(result.date)}
+                {formatDateToCustomFormat(workouts.date)}
               </Badge>
               <Badge colorScheme='blue' fontSize='md'>
-                {result.user.firstname}
+                {workouts.user.firstname}
               </Badge>
             </HStack>
             <Text fontWeight='bold' fontSize='lg' mt={2}>
-              {result.description || 'Aucune description disponible'}
+              {workouts.description || 'Aucune description disponible'}
             </Text>
             <HStack spacing={2} mt={2}>
-              <Link href={`/workouts/${result.id}`}>
+              <Link href={`/workouts/${workouts.id}`}>
                 <IconButton
                   variant='outline'
                   colorScheme='blue'
@@ -65,11 +61,13 @@ export default function KawaiiResults({ data }: KawaiiProps) {
               />
             </HStack>
             <Text mt={2}>
-              {result.exercises.length > 0 ? `Nombre d'exercices: ${result.exercises.length}` : 'Aucun exercice trouvé'}
+              {workouts.exercises.length > 0
+                ? `Nombre d'exercices: ${workouts.exercises.length}`
+                : 'Aucun exercice trouvé'}
             </Text>
-            {result.exercises.length > 0 && (
+            {workouts.exercises.length > 0 && (
               <Wrap mt={2}>
-                {result.exercises.map((exercise) => {
+                {workouts.exercises.map((exercise) => {
                   if (displayedGroups.has(exercise.group.name)) {
                     return null;
                   }

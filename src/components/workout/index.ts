@@ -1,4 +1,4 @@
 import WorkoutList from './workout-list';
-import KawaiiWorkoutCard from './kawaii-card';
+import KawaiiWorkoutPage from './kawaii-page';
 
-export { WorkoutList, KawaiiWorkoutCard };
+export { WorkoutList, KawaiiWorkoutPage };

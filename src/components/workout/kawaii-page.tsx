@@ -25,7 +25,7 @@ const giveMeColor = (index: number) => {
   return postItColors[colorIndex];
 };
 
-const KawaiiWorkoutCard = ({ id }: { id: number }) => {
+const KawaiiWorkoutPage = ({ id }: { id: number }) => {
   const [workout, setWorkout] = useState<Workout | null>(null);
 
   useEffect(() => {
@@ -123,4 +123,4 @@ function Scotch({ name }: { name: string }) {
   );
 }
 
-export default KawaiiWorkoutCard;
+export default KawaiiWorkoutPage;

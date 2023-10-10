@@ -1,5 +1,5 @@
-import { KawaiiWorkoutCard } from '@/components/workout';
+import { KawaiiWorkoutPage } from '@/components/workout';
 
 export default function WorkoutDetails({ params }: { params: { id: string } }) {
-  return <KawaiiWorkoutCard id={parseInt(params.id)} />;
+  return <KawaiiWorkoutPage id={parseInt(params.id)} />;
 }
