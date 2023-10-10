@@ -27,7 +27,7 @@ export default function SidebarContent({ onClose, ...rest }: SidebarProps) {
         <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
       </Flex>
       {LinkItems.map((link) => (
-        <NavItem key={link.name} icon={link.icon} url={link.url}>
+        <NavItem key={link.name} icon={link.icon} url={link.url} onClick={onClose}>
           {link.name}
         </NavItem>
       ))}
