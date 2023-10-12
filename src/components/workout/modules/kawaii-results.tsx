@@ -18,7 +18,16 @@ export default function KawaiiResults({ workouts }: { workouts: Workout[] }) {
   return (
     <VStack spacing={4} align='start'>
       {workouts.map((workouts) => (
-        <Card key={workouts.id} w='full'>
+        <Card
+          key={workouts.id}
+          w='full'
+          borderWidth='1px'
+          borderColor='white'
+          _hover={{
+            borderColor: 'blue.500', // Changez la couleur de la bordure selon vos besoins
+            boxShadow: 'lg',
+          }}
+        >
           <CardBody>
             <HStack>
               <Badge colorScheme='teal' fontSize='md'>
@@ -65,7 +74,7 @@ export default function KawaiiResults({ workouts }: { workouts: Workout[] }) {
                 ? `Nombre d'exercices: ${workouts.exercises.length}`
                 : 'Aucun exercice trouvé'}
             </Text>
-            {workouts.exercises.length > 0 && (
+            {workouts.exercises.length > 0 ? (
               <Wrap mt={2}>
                 {workouts.exercises.map((exercise) => {
                   if (displayedGroups.has(exercise.group.name)) {
@@ -79,6 +88,10 @@ export default function KawaiiResults({ workouts }: { workouts: Workout[] }) {
                   );
                 })}
               </Wrap>
+            ) : (
+              <Tag mt={2} colorScheme={randomColorScheme()}>
+                Ajouter des exercices avec le +
+              </Tag>
             )}
           </CardBody>
         </Card>

@@ -62,8 +62,8 @@ export default function Login() {
           </Text>
         </Stack>
         <Box rounded={'lg'} bg={useColorModeValue('white', 'gray.700')} boxShadow={'lg'} p={8}>
-          <Center>
-            <Image src='djoky_logo.png' boxSize='100px' borderRadius='full' alt='app logo' />
+          <Center mb={4}>
+            <Image src='./assets/djoky_128px.png' boxSize='100px' borderRadius='full' alt='app logo' />
           </Center>
 
           <form onSubmit={handleLogin}>

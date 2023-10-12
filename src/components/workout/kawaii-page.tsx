@@ -65,7 +65,7 @@ const KawaiiWorkoutPage = ({ id }: { id: number }) => {
           <Text fontSize='xl'>
             Il y a <strong style={{ fontWeight: 'bold' }}>{workout.exercises.length}</strong> exercices
           </Text>
-          <Wrap>
+          <Wrap justify='center'>
             {workout.exercises.map((exercise, index) => {
               return (
                 <WrapItem key={exercise.id}>
