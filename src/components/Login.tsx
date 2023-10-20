@@ -20,6 +20,7 @@ import {
 } from '@chakra-ui/react';
 import { FormEvent, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { deleteFilter } from './workout/utils';
 
 export default function Login() {
   const router = useRouter();
@@ -48,6 +49,7 @@ export default function Login() {
       });
       return;
     }
+    deleteFilter();
     router.refresh();
     router.replace('/');
   };

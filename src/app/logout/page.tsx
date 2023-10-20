@@ -1,5 +1,6 @@
 'use client';
 
+import { deleteFilter } from '@/components/workout/utils';
 import useAuth from '@/hooks/useAuth';
 import { Button, Card, CardBody, CardHeader, Stack, Heading } from '@chakra-ui/react';
 import { useRouter } from 'next/navigation';
@@ -10,6 +11,7 @@ export default function LogoutPage() {
 
   const handleLogout = async () => {
     try {
+      deleteFilter();
       await logout();
       router.refresh();
       router.replace('/');

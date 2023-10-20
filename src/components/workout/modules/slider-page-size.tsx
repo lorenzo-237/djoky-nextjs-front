@@ -1,6 +1,5 @@
 import { Slider, SliderMark, SliderTrack, SliderFilledTrack, Tooltip, SliderThumb } from '@chakra-ui/react';
 import React from 'react';
-import { DEFAULT_PAGE_SIZE } from '../constants';
 
 function SliderPageSize({
   pageSize,
@@ -14,7 +13,7 @@ function SliderPageSize({
   return (
     <Slider
       id='slider'
-      defaultValue={DEFAULT_PAGE_SIZE}
+      defaultValue={pageSize}
       min={1}
       max={50}
       colorScheme='blue'

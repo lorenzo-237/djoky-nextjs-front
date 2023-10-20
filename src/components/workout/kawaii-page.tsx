@@ -2,31 +2,32 @@
 
 import React, { useEffect, useState } from 'react';
 import {
-  Box,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
   Heading,
   Text,
   Stack,
   Badge,
-  Flex,
-  Wrap,
-  WrapItem,
   CardBody,
   Card,
   CardHeader,
   VStack,
+  Tooltip,
+  Tabs,
+  Wrap,
 } from '@chakra-ui/react';
 import { formatDateToCustomFormat } from '@/utils/functions/convert';
 import fetchWorkout from '@/db/workouts/client/fetch-workout';
-
-const postItColors = ['blue.100', 'green.100', 'red.100', 'purple.100'];
-
-const giveMeColor = (index: number) => {
-  const colorIndex = index % postItColors.length;
-  return postItColors[colorIndex];
-};
+import { PageNotFound } from '../pages';
+import WorkoutPostsIt from './modules/workout-posts-it';
+import WorkoutMultistep from './modules/workout-multistep';
+import { FormMultiStepProvider } from './modules/contexts/form-multistep.context';
 
 const KawaiiWorkoutPage = ({ id }: { id: number }) => {
   const [workout, setWorkout] = useState<Workout | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -38,11 +39,17 @@ const KawaiiWorkoutPage = ({ id }: { id: number }) => {
       }
     };
 
-    fetchData();
+    fetchData().then(() => {
+      setLoading(false);
+    });
   }, [id]);
 
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
   if (!workout) {
-    return <p>Not found workout</p>;
+    return <PageNotFound />;
   }
 
   return (
@@ -51,7 +58,8 @@ const KawaiiWorkoutPage = ({ id }: { id: number }) => {
         <Heading fontSize='2xl' mb={4}>
           {workout.description}
         </Heading>
-        <Stack direction={['column', 'row']}>
+
+        <Stack direction={['column', 'row']} mb={2}>
           <Badge colorScheme='teal' fontSize='md'>
             {formatDateToCustomFormat(workout.date)}
           </Badge>
@@ -59,68 +67,36 @@ const KawaiiWorkoutPage = ({ id }: { id: number }) => {
             {workout.user.firstname} {workout.user.lastname}
           </Badge>
         </Stack>
+        <Text fontSize='lg' as='b'>
+          {workout.exercises.length} Exercices
+        </Text>
       </CardHeader>
       <CardBody>
-        <VStack spacing={10} align='center'>
-          <Text fontSize='xl'>
-            Il y a <strong style={{ fontWeight: 'bold' }}>{workout.exercises.length}</strong> exercices
-          </Text>
-          <Wrap justify='center'>
-            {workout.exercises.map((exercise, index) => {
-              return (
-                <WrapItem key={exercise.id}>
-                  <PostIt exercise={exercise} index={index} />
-                </WrapItem>
-              );
-            })}
-          </Wrap>
+        <VStack spacing={10}>
+          <Tabs variant='soft-rounded' colorScheme='blue' w='full' defaultIndex={1}>
+            <TabList mb={5}>
+              <Tooltip label='Consulter les exercices' openDelay={500}>
+                <Tab>CONSULTER</Tab>
+              </Tooltip>
+              <Tooltip label='Ajouter des exercices' openDelay={500}>
+                <Tab>AJOUTER</Tab>
+              </Tooltip>
+            </TabList>
+            <TabPanels>
+              <TabPanel>
+                <WorkoutPostsIt exercises={workout.exercises} />
+              </TabPanel>
+              <TabPanel>
+                <FormMultiStepProvider>
+                  <WorkoutMultistep />
+                </FormMultiStepProvider>
+              </TabPanel>
+            </TabPanels>
+          </Tabs>
         </VStack>
       </CardBody>
     </Card>
   );
 };
-
-function PostIt({ exercise, index }: { exercise: WorkoutExercise; index: number }) {
-  return (
-    <Flex alignItems='center' justifyContent='center'>
-      <Box bg={giveMeColor(index)} w='300px' boxShadow='md' position='relative'>
-        <Scotch name={exercise.group.name} />
-        <Flex color='blue.700' direction='column' alignItems='center' paddingY='2rem'>
-          <Box>
-            <Heading fontSize='lg' fontWeight='semibold'>
-              {exercise.name}
-            </Heading>
-            <Text>Répétitions : {exercise.repetitions}</Text>
-            <Text>Séries : {exercise.series}</Text>
-            <Text>Total : {exercise.total}</Text>
-            <Text>Time : {exercise.time}</Text>
-            <Text>Poids : {exercise.weight}</Text>
-            <Text>Date heure : {formatDateToCustomFormat(exercise.assignedAt)}</Text>
-          </Box>
-        </Flex>
-      </Box>
-    </Flex>
-  );
-}
-
-function Scotch({ name }: { name: string }) {
-  return (
-    <Box
-      color='yellow.700'
-      fontWeight='semibold'
-      bg='yellow.200'
-      paddingX='1rem'
-      h='45px'
-      position='absolute'
-      top='-20px'
-      left='25%'
-      display='flex'
-      alignItems='center'
-      justifyContent='center'
-    >
-      {name}
-    </Box>
-  );
-}
 
 export default KawaiiWorkoutPage;

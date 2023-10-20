@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { KawaiiResults, SliderPageSize } from './modules';
 import {
   FormControl,
@@ -20,32 +20,16 @@ import {
   Skeleton,
   Collapse,
   CardHeader,
+  useToast,
 } from '@chakra-ui/react';
 import { ChevronLeftIcon, ChevronRightIcon, Search2Icon } from '@chakra-ui/icons';
 import fetchSessionWorkout from '@/db/workouts/client/fetch-session-workout';
-import { DEFAULT_PAGE_SIZE } from './constants';
-
-type DateRangeType = {
-  min: string;
-  max: string;
-};
-
-type PageFilterType = {
-  startDate: string;
-  endDate: string;
-  page: number;
-  pageSize: number;
-};
-
-// Formatage des dates au format "YYYY-MM-DD" pour les champs de date
-const formatDate = (date: Date) => {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
-};
+import { DateRangeType, PageFilterType } from './types';
+import { getDateRange, getPageSize, getFilter, saveFilter } from './utils';
+import { WORKOUT_LOCAL_KEY } from '@/constants';
 
 function WorkoutList() {
+  const toast = useToast();
   const [data, setData] = useState<WorkoutResponse>({
     page: 0,
     pageSize: 0,
@@ -54,18 +38,10 @@ function WorkoutList() {
     rows: [],
   });
   const [filterOpen, setFilterOpen] = useState<boolean>(true);
-  const [dateRange, setDateRange] = useState<DateRangeType>({
-    min: formatDate(new Date(new Date().setDate(new Date().getDate() - 7))),
-    max: formatDate(new Date()),
-  });
-  const [pageSize, setPageSize] = useState<number>(DEFAULT_PAGE_SIZE);
+  const [dateRange, setDateRange] = useState<DateRangeType>(getDateRange());
+  const [pageSize, setPageSize] = useState<number>(getPageSize());
 
-  const [filter, setFilter] = useState<PageFilterType>({
-    startDate: '',
-    endDate: '',
-    page: 1,
-    pageSize: DEFAULT_PAGE_SIZE,
-  });
+  const [filter, setFilter] = useState<PageFilterType>(getFilter());
   const [loading, setLoading] = useState<boolean>(false);
 
   // handle form dates changes
@@ -94,46 +70,53 @@ function WorkoutList() {
         }
 
         setData(fetchedData);
-      } catch (error) {
-        throw error;
+      } catch (error: any) {
+        toast({
+          title: 'Erreur lors de la récupération des données',
+          description: error.message,
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+        });
       }
 
       setLoading(false);
     }, 500);
   };
 
-  const handleSearch = async (e: React.FormEvent) => {
+  const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
+
     const newStartDate = dateRange.min;
     const newEndDate = dateRange.max;
     const newPageSize = pageSize;
 
-    setFilter({
+    const data = {
       page: 1,
       pageSize: newPageSize,
       startDate: newStartDate,
       endDate: newEndDate,
-    });
+    };
 
-    try {
-      await fetchWorkouts(1, newPageSize, newStartDate, newEndDate);
-      console.log(data);
-    } catch (error) {
-      console.error("Erreur lors de la récupération des données de l'API:", error);
-    }
+    setFilter(data);
+    saveFilter(data);
+    fetchWorkouts(1, newPageSize, newStartDate, newEndDate);
   };
 
-  const handlePageChange = async (newPage: number) => {
+  const handlePageChange = (newPage: number) => {
     setFilter((prevFilter) => ({ ...prevFilter, page: newPage }));
 
     const { startDate, endDate, pageSize } = filter;
 
-    try {
-      await fetchWorkouts(newPage, pageSize, startDate, endDate);
-    } catch (error) {
-      console.error("Erreur lors de la récupération des données de l'API:", error);
-    }
+    fetchWorkouts(newPage, pageSize, startDate, endDate);
   };
+
+  useEffect(() => {
+    if (localStorage.getItem(WORKOUT_LOCAL_KEY) != null) {
+      fetchWorkouts(1, filter.pageSize, filter.startDate, filter.endDate);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <VStack spacing={4} align='stretch'>
@@ -200,7 +183,7 @@ function WorkoutsListAndPagination({
   loading: boolean;
   data: WorkoutResponse;
   filter: PageFilterType;
-  handlePageChange: (newPage: number) => Promise<void>;
+  handlePageChange: (newPage: number) => void;
 }) {
   // https://www.iconfinder.com/Rudityas
   if (data.page === 0) {
@@ -290,7 +273,7 @@ function PageNumbers({
 }: {
   currentPage: number;
   totalPage: number;
-  handlePageChange: (newPage: number) => Promise<void>;
+  handlePageChange: (newPage: number) => void;
 }) {
   const pages: number[] = [];
   for (let i = 1; i <= totalPage; i++) {

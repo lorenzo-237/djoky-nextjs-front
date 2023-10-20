@@ -6,11 +6,11 @@ import { formatDateToCustomFormat } from '@/utils/functions/convert';
 import { AddIcon, DeleteIcon, ViewIcon } from '@chakra-ui/icons';
 import Link from 'next/link';
 
-function randomColorScheme() {
-  const availableColorSchemes = ['teal', 'blue', 'green', 'red', 'pink', 'yellow'];
-  const randomIndex = Math.floor(Math.random() * availableColorSchemes.length);
-  return availableColorSchemes[randomIndex];
-}
+// function randomColorScheme() {
+//   const availableColorSchemes = ['teal', 'blue', 'green', 'red', 'pink', 'yellow'];
+//   const randomIndex = Math.floor(Math.random() * availableColorSchemes.length);
+//   return availableColorSchemes[randomIndex];
+// }
 
 export default function KawaiiResults({ workouts }: { workouts: Workout[] }) {
   const displayedGroups = new Set();
@@ -24,18 +24,16 @@ export default function KawaiiResults({ workouts }: { workouts: Workout[] }) {
           borderWidth='1px'
           borderColor='white'
           _hover={{
-            borderColor: 'blue.500', // Changez la couleur de la bordure selon vos besoins
+            borderColor: 'purple.400',
             boxShadow: 'lg',
           }}
         >
           <CardBody>
             <HStack>
-              <Badge colorScheme='teal' fontSize='md'>
+              <Badge fontSize='lg' colorScheme='purple' variant='subtle'>
                 {formatDateToCustomFormat(workouts.date)}
               </Badge>
-              <Badge colorScheme='blue' fontSize='md'>
-                {workouts.user.firstname}
-              </Badge>
+              <Badge colorScheme='blue'>{workouts.user.firstname}</Badge>
             </HStack>
             <Text fontWeight='bold' fontSize='lg' mt={2}>
               {workouts.description || 'Aucune description disponible'}
@@ -44,7 +42,7 @@ export default function KawaiiResults({ workouts }: { workouts: Workout[] }) {
               <Link href={`/workouts/${workouts.id}`}>
                 <IconButton
                   variant='outline'
-                  colorScheme='blue'
+                  colorScheme='purple'
                   title='Consulter le workout'
                   aria-label='Consulter le workout'
                   size='sm'
@@ -83,13 +81,15 @@ export default function KawaiiResults({ workouts }: { workouts: Workout[] }) {
                   displayedGroups.add(exercise.group.name);
                   return (
                     <WrapItem key={exercise.id}>
-                      <Tag colorScheme={randomColorScheme()}>{exercise.group.name}</Tag>
+                      <Tag colorScheme='purple' variant='outline'>
+                        {exercise.group.name}
+                      </Tag>
                     </WrapItem>
                   );
                 })}
               </Wrap>
             ) : (
-              <Tag mt={2} colorScheme={randomColorScheme()}>
+              <Tag mt={2} colorScheme='purple'>
                 Ajouter des exercices avec le +
               </Tag>
             )}
