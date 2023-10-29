@@ -12,7 +12,13 @@ type FormMultiStepState = {
 
 export const useFormMultiStepStore = create<FormMultiStepState>()((set) => ({
   exercises: [],
-  addExercise: (exo) => set((state) => ({ exercises: [...state.exercises, exo] })),
+  addExercise: (exo) =>
+    set((state) => {
+      if (!state.exercises.some((item) => item.id === exo.id)) {
+        return { exercises: [...state.exercises, exo] };
+      }
+      return state;
+    }),
   removeExercise: (exo) => set((state) => ({ exercises: state.exercises.filter((item) => item.id !== exo.id) })),
   addListExercises: (exos) =>
     set((state) => ({

@@ -3,10 +3,10 @@
 import { Box, Text } from '@chakra-ui/react';
 import { useSteps } from '@chakra-ui/react';
 import { GroupsExercicesStep, Steppeur, steps } from './steps';
-import useForm from './hooks/useFormMultiStep';
+import { useFormMultiStepStore } from './store/multistep.store';
 
 export default function WorkoutMultistep() {
-  const { exercises } = useForm();
+  const { exercises } = useFormMultiStepStore();
 
   const { activeStep } = useSteps({
     index: 0,

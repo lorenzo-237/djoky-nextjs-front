@@ -17,7 +17,7 @@ import {
 import React, { useState } from 'react';
 import { fakeExercises, fakeGroups } from './db.fake';
 import { CheckExercise } from './types';
-import useForm from '../hooks/useFormMultiStep';
+import { useFormMultiStepStore } from '../store/multistep.store';
 
 function GroupsExercicesStep() {
   const groups = fakeGroups;
@@ -51,7 +51,7 @@ function GroupItem({ group }: { group: Group }) {
   const [gridVisible, setGridVisible] = useState<boolean | null>(null);
   const [exercises, setExercises] = useState<CheckExercise[]>([]);
 
-  const { addExercise, removeExercise, addListExercises, removeListExercises } = useForm();
+  const { addExercise, removeExercise, addListExercises, removeListExercises } = useFormMultiStepStore();
 
   const fetchExercises = () => {
     const exercisesDb = fakeExercises; // todo: make http GET request by group id

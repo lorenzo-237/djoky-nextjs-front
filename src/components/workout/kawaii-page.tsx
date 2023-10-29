@@ -23,11 +23,15 @@ import fetchWorkout from '@/db/workouts/client/fetch-workout';
 import { PageNotFound } from '../pages';
 import WorkoutPostsIt from './modules/workout-posts-it';
 import WorkoutMultistep from './modules/workout-multistep';
-import { FormMultiStepProvider } from './modules/contexts/form-multistep.context';
+import { useFormMultiStepStore } from './modules/store/multistep.store';
 
 const KawaiiWorkoutPage = ({ id }: { id: number }) => {
   const [workout, setWorkout] = useState<Workout | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+
+  const exercises = useFormMultiStepStore((state) => state.exercises);
+
+  console.log(exercises);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -87,9 +91,7 @@ const KawaiiWorkoutPage = ({ id }: { id: number }) => {
                 <WorkoutPostsIt exercises={workout.exercises} />
               </TabPanel>
               <TabPanel>
-                <FormMultiStepProvider>
-                  <WorkoutMultistep />
-                </FormMultiStepProvider>
+                <WorkoutMultistep />
               </TabPanel>
             </TabPanels>
           </Tabs>
