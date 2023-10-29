@@ -47,7 +47,7 @@ const initialState: ExerciseState = {
 };
 
 const useExerciseStore = create(
-  combine(initialState, (set) => ({
+  combine(initialState, (set, get) => ({
     initData: (payload: ExerciseResponse) => set(() => ({ response: payload })),
 
     setCurrentUpdate: (dto: UpdateExerciseDto) => set(() => ({ currentUpdate: dto })),
@@ -119,6 +119,10 @@ const useExerciseStore = create(
           ),
         },
       })),
+    getExercisesByGroup: (groupId: number) => {
+      const exercises = get().response.rows;
+      return exercises.filter((exercise) => exercise.group.id === groupId);
+    },
   }))
 );
 
