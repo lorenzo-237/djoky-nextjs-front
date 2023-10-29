@@ -33,7 +33,7 @@ type Group = {
     id: number;
     name: string;
   };
-  exercises: ExerciseModel[];
+  exercisesCount: number;
 };
 
 type GroupResponse = {
@@ -41,7 +41,7 @@ type GroupResponse = {
   rows: Group[];
 };
 
-type ExerciseModel = {
+type Exercise = {
   id: number;
   name: string;
   description: string;
@@ -50,9 +50,6 @@ type ExerciseModel = {
   createdUserId: number;
   isPending: boolean;
   timed: boolean;
-};
-
-type Exercise = ExerciseModel & {
   group: {
     id: number;
     name: string;
@@ -73,6 +70,14 @@ type WorkoutExercise = {
   name: string;
   description: string;
   timed: boolean;
+  group: {
+    id: number;
+    name: string;
+    category: {
+      id: number;
+      name: string;
+    };
+  };
   assignedAt: string;
   series: number;
   repetitions: number;

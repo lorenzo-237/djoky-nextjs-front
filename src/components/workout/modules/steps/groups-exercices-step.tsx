@@ -15,12 +15,12 @@ import {
   WrapItem,
 } from '@chakra-ui/react';
 import React, { useState } from 'react';
-import { fakeExercises, fakeGroups } from './db.fake';
 import { CheckExercise } from './types';
 import { useFormMultiStepStore } from '../store/multistep.store';
+import { useExerciseStore, useGroupStore } from '@/stores';
 
 function GroupsExercicesStep() {
-  const groups = fakeGroups;
+  const { count, rows } = useGroupStore((state) => state.response);
 
   return (
     <Stack spacing={4}>
@@ -32,7 +32,7 @@ function GroupsExercicesStep() {
           <Input placeholder='Groupe' autoComplete='off' />
         </InputGroup>
       </FormControl>
-      {groups.length > 0 && <GroupsList groups={groups} />}
+      {count > 0 && <GroupsList groups={rows} />}
     </Stack>
   );
 }
@@ -40,35 +40,37 @@ function GroupsExercicesStep() {
 function GroupsList({ groups }: { groups: Group[] }) {
   return (
     <VStack>
-      {groups.map((group) => (
-        <GroupItem key={group.id} group={group} />
-      ))}
+      {groups
+        .filter((group) => group.exercisesCount > 0)
+        .map((group) => (
+          <GroupItem key={group.id} group={group} />
+        ))}
     </VStack>
   );
 }
 
 function GroupItem({ group }: { group: Group }) {
-  const [gridVisible, setGridVisible] = useState<boolean | null>(null);
-  const [exercises, setExercises] = useState<CheckExercise[]>([]);
+  const [gridVisible, setGridVisible] = useState<boolean>(false);
+
+  const exos = useExerciseStore((state) => state.getExercisesByGroup(group.id));
+
+  const [exercises, setExercises] = useState<CheckExercise[]>(
+    exos.map((exo) => ({
+      ...exo,
+      checked: false,
+      assignedAt: '',
+      series: 0,
+      repetitions: 0,
+      time: 0,
+      weight: 0,
+      total: 0,
+    }))
+  );
 
   const { addExercise, removeExercise, addListExercises, removeListExercises } = useFormMultiStepStore();
 
-  const fetchExercises = () => {
-    const exercisesDb = fakeExercises; // todo: make http GET request by group id
-    setExercises(
-      exercisesDb.map((exo) => {
-        return { ...exo, checked: false };
-      })
-    );
-  };
-
   const handleClickOnGroup = () => {
-    if (gridVisible === null) {
-      fetchExercises();
-      setGridVisible(true);
-    } else {
-      setGridVisible((prev) => !prev);
-    }
+    setGridVisible((prev) => !prev);
   };
 
   const handleCheckboxChange = (index: number, isChecked: boolean) => {
