@@ -35,6 +35,7 @@ export default function ExerciseForm() {
 
   const groups = useGroupStore((state) => state.response);
   const addExercise = useExerciseStore((state) => state.add);
+  const addExerciseToGroup = useGroupStore((state) => state.addExercise);
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
@@ -68,6 +69,7 @@ export default function ExerciseForm() {
       });
 
       addExercise(exercise);
+      addExerciseToGroup({ groupId: data.groupId, exercise: exercise });
     } catch (error: any) {
       setError(error.message.toString());
       toast({
