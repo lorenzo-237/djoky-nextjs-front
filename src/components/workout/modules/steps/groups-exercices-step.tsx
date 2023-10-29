@@ -21,6 +21,12 @@ import { useExerciseStore, useGroupStore } from '@/stores';
 
 function GroupsExercicesStep() {
   const { count, rows } = useGroupStore((state) => state.response);
+  const [groupName, setGroupName] = useState('');
+
+  const rowsVisible =
+    count <= 0
+      ? []
+      : rows.filter((row) => row.name.toLowerCase().startsWith(groupName.toLowerCase()) && row.exercisesCount > 0);
 
   return (
     <Stack spacing={4}>
@@ -29,10 +35,21 @@ function GroupsExercicesStep() {
           <InputLeftElement pointerEvents='none'>
             <SearchIcon />
           </InputLeftElement>
-          <Input placeholder='Groupe' autoComplete='off' />
+          <Input
+            placeholder='Rechercher un groupe'
+            autoComplete='off'
+            value={groupName}
+            onChange={(e) => setGroupName(e.target.value)}
+          />
         </InputGroup>
       </FormControl>
-      {count > 0 && <GroupsList groups={rows} />}
+      {rowsVisible.length > 0 ? (
+        <GroupsList groups={rowsVisible} />
+      ) : (
+        <Text align='center' textDecoration='underline' color='red.400'>
+          Pas de résultats
+        </Text>
+      )}
     </Stack>
   );
 }
@@ -40,11 +57,9 @@ function GroupsExercicesStep() {
 function GroupsList({ groups }: { groups: Group[] }) {
   return (
     <VStack>
-      {groups
-        .filter((group) => group.exercisesCount > 0)
-        .map((group) => (
-          <GroupItem key={group.id} group={group} />
-        ))}
+      {groups.map((group) => (
+        <GroupItem key={group.id} group={group} />
+      ))}
     </VStack>
   );
 }
