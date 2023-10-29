@@ -15,6 +15,11 @@ type RefreshCategoryDto = {
   categoryName: string;
 };
 
+type AddExercisePayload = {
+  groupId: number;
+  exercise: ExerciseModel;
+};
+
 export interface GroupState {
   response: GroupResponse;
   currentUpdate: UpdateGroupDto;
@@ -84,6 +89,20 @@ const useGroupStore = create(
                     ...group.category,
                     name: categoryName,
                   },
+                }
+              : group
+          ),
+        },
+      })),
+    addExercise: (payload: AddExercisePayload) =>
+      set((state) => ({
+        response: {
+          ...state.response,
+          rows: state.response.rows.map((group) =>
+            group.id === payload.groupId
+              ? {
+                  ...group,
+                  exercises: [...group.exercises, payload.exercise],
                 }
               : group
           ),
