@@ -112,7 +112,9 @@ function GroupItem({ group }: { group: Group }) {
         onClick={handleClickOnGroup}
       >
         <Flex direction='row' alignItems='center' justify='center' gap={2}>
-          <Text fontWeight='bold'>{group.name}</Text>
+          <Text fontWeight='bold'>
+            {group.name} ({group.exercisesCount})
+          </Text>
         </Flex>
       </Box>
       {visible && (
