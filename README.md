@@ -23,3 +23,9 @@ Peut être que je le changerai à l'avenir... après tout le concept d'API REST 
 ```bash
 NEXT_PUBLIC_API_URL="http://localhost:3333/api"
 ```
+
+## Git utils
+
+create new branch : git checkout -b ma_nouvelle_branche
+
+push to repo dis : git push -u origin ma_nouvelle_branche
