@@ -19,31 +19,31 @@ import {
   StackDivider,
 } from '@chakra-ui/react';
 import { EditIcon, CheckIcon, TimeIcon } from '@chakra-ui/icons';
-import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '@/app/store';
-import { pending, setCurrentUpdate, validate } from '@/reducers/group.slice';
 import { pendingGroup, validateGroup } from '@/db/groups';
 import { useRef, useState } from 'react';
 import { GroupUpdateModal } from './modules';
+import { useCategoryStore, useGroupStore } from '@/stores';
 
 export default function GroupTable() {
-  const { count, rows } = useSelector((state: RootState) => state.group.data);
-  const categories = useSelector((state: RootState) => state.category.data);
+  const { count, rows } = useGroupStore((state) => state.response);
+  const setCurrentUpdate = useGroupStore((state) => state.setCurrentUpdate);
+  const validate = useGroupStore((state) => state.validate);
+  const pending = useGroupStore((state) => state.pending);
+  const categories = useCategoryStore((state) => state.response);
   const [groupId, setGroupId] = useState<number>(0);
-  const dispatch = useDispatch();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const updateBtnRef = useRef(null);
 
   const handleEdit = (id: number, name: string, category: { id: number; name: string }) => {
-    dispatch(setCurrentUpdate({ id, name, category }));
+    setCurrentUpdate({ id, name, category });
     onOpen();
   };
 
   const handleValidate = async (id: number) => {
     try {
       await validateGroup(id);
-      dispatch(validate(id));
+      validate(id);
     } catch (error) {
       console.error(error);
     }
@@ -52,7 +52,7 @@ export default function GroupTable() {
   const handlePending = async (id: number) => {
     try {
       await pendingGroup(id);
-      dispatch(pending(id));
+      pending(id);
     } catch (error) {
       console.error(error);
     }

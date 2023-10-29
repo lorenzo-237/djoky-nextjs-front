@@ -17,10 +17,8 @@ import {
   Radio,
 } from '@chakra-ui/react';
 import { FormEvent, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { addExercise } from '@/reducers/exercise.slice';
 import { createNewExercise } from '@/db/exercises';
-import { RootState } from '@/app/store';
+import { useExerciseStore, useGroupStore } from '@/stores';
 
 const initialState = {
   name: '',
@@ -34,9 +32,9 @@ export default function ExerciseForm() {
 
   const [error, setError] = useState<string | null>(null);
   const toast = useToast();
-  const dispatch = useDispatch();
 
-  const groups = useSelector((state: RootState) => state.group.data);
+  const groups = useGroupStore((state) => state.response);
+  const addExercise = useExerciseStore((state) => state.add);
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
@@ -69,7 +67,7 @@ export default function ExerciseForm() {
         isClosable: true,
       });
 
-      dispatch(addExercise(exercise));
+      addExercise(exercise);
     } catch (error: any) {
       setError(error.message.toString());
       toast({

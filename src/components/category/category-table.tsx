@@ -16,29 +16,29 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 import { EditIcon, CheckIcon, TimeIcon } from '@chakra-ui/icons';
-import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '@/app/store';
-import { pending, setCurrentUpdate, validate } from '@/reducers/category.slice';
 import { pendingCategory, validateCategory } from '@/db/categories';
 import { useRef } from 'react';
 import { CategoryUpdateModal } from './modules';
+import { useCategoryStore } from '@/stores';
 
 export default function CategoryTable() {
-  const { count, rows } = useSelector((state: RootState) => state.category.data);
-  const dispatch = useDispatch();
+  const { count, rows } = useCategoryStore((state) => state.response);
+  const setCurrentUpdate = useCategoryStore((state) => state.setCurrentUpdate);
+  const validate = useCategoryStore((state) => state.validate);
+  const pending = useCategoryStore((state) => state.pending);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const updateBtnRef = useRef(null);
 
   const handleEdit = (id: number, name: string) => {
-    dispatch(setCurrentUpdate({ id, name }));
+    setCurrentUpdate({ id, name });
     onOpen();
   };
 
   const handleValidate = async (id: number) => {
     try {
       await validateCategory(id);
-      dispatch(validate(id));
+      validate(id);
     } catch (error) {
       console.error(error);
     }
@@ -47,7 +47,7 @@ export default function CategoryTable() {
   const handlePending = async (id: number) => {
     try {
       await pendingCategory(id);
-      dispatch(pending(id));
+      pending(id);
     } catch (error) {
       console.error(error);
     }

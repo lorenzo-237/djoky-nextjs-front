@@ -3,11 +3,8 @@
 import { Button, FormControl, FormLabel, Input } from '@chakra-ui/react';
 import React, { useEffect, useRef, useState } from 'react';
 import { DefaultModal } from '../../structure';
-import { RootState } from '@/app/store';
-import { useSelector, useDispatch } from 'react-redux';
 import { updateCategory } from '@/db/categories';
-import { update } from '@/reducers/category.slice';
-import { refreshCategory } from '@/reducers/group.slice';
+import { useCategoryStore, useGroupStore } from '@/stores';
 
 export interface CategoryUpdateModalProps {
   isOpen: boolean;
@@ -17,9 +14,10 @@ export interface CategoryUpdateModalProps {
 
 export default function CategoryUpdateModal({ isOpen, onClose, finalRef }: CategoryUpdateModalProps) {
   const initialRef = useRef(null);
-  const { id, name } = useSelector((state: RootState) => state.category.currentUpdate);
+  const { id, name } = useCategoryStore((state) => state.currentUpdate);
+  const updateStore = useCategoryStore((state) => state.update);
+  const refreshCategory = useGroupStore((state) => state.refreshCategory);
   const [categoryName, setCategoryName] = useState<string>('');
-  const dispatch = useDispatch();
 
   useEffect(() => {
     setCategoryName(name);
@@ -28,8 +26,8 @@ export default function CategoryUpdateModal({ isOpen, onClose, finalRef }: Categ
   const handleUpdate = async () => {
     try {
       const category = await updateCategory(id, categoryName);
-      dispatch(update({ id: category.id, name: category.name }));
-      dispatch(refreshCategory({ categoryId: category.id, categoryName: category.name }));
+      updateStore({ id: category.id, name: category.name });
+      refreshCategory({ categoryId: category.id, categoryName: category.name });
       onClose();
     } catch (error) {
       console.error(error);

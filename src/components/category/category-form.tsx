@@ -13,14 +13,13 @@ import {
 } from '@chakra-ui/react';
 import { FormEvent, useState } from 'react';
 import { createNewCategory } from '@/db/categories';
-import { useDispatch } from 'react-redux';
-import { addCategory } from '@/reducers/category.slice';
+import { useCategoryStore } from '@/stores';
 
 export default function CategoryForm() {
   const [categoryName, setCategoryName] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
   const toast = useToast();
-  const dispatch = useDispatch();
+  const addCategory = useCategoryStore((state) => state.add);
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
@@ -40,7 +39,7 @@ export default function CategoryForm() {
         isClosable: true,
       });
 
-      dispatch(addCategory(category));
+      addCategory(category);
     } catch (error: any) {
       setError(error.message.toString());
       toast({
