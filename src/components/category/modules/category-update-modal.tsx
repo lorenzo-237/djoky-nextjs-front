@@ -4,7 +4,6 @@ import { Button, FormControl, FormLabel, Input } from '@chakra-ui/react';
 import React, { useEffect, useRef, useState } from 'react';
 import { DefaultModal } from '../../structure';
 import { updateCategory } from '@/db/categories';
-import { refreshCategory } from '@/reducers/group.slice';
 import { useCategoryStore, useGroupStore } from '@/stores';
 
 export interface CategoryUpdateModalProps {
