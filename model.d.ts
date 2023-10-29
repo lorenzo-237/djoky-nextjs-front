@@ -73,14 +73,6 @@ type WorkoutExercise = {
   name: string;
   description: string;
   timed: boolean;
-  group: {
-    id: number;
-    name: string;
-    category: {
-      id: number;
-      name: string;
-    };
-  };
   assignedAt: string;
   series: number;
   repetitions: number;
