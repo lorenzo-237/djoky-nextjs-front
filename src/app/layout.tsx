@@ -24,10 +24,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang='fr'>
       <body>
-        <Providers
-          session={session}
-          appContextType={{ categoryResponse: categoryRes, groupResponse: groupRes, exerciseResponse: exerciseRes }}
-        >
+        <Providers session={session} data={{ category: categoryRes, group: groupRes, exercise: exerciseRes }}>
           {session ? <Sidebar>{children}</Sidebar> : <HomeComponent />}
         </Providers>
       </body>
