@@ -1,25 +1,27 @@
-import { create, StateCreator } from 'zustand';
+import { StateCreator } from 'zustand';
 
 export interface CategorySlice {
-  data: CategoryResponse;
-  currentUpdate: {
-    id: 0;
-    name: '';
+  category: {
+    response: CategoryResponse;
+    currentUpdate: {
+      id: 0;
+      name: '';
+    };
+    initData: (payload: CategoryResponse) => void;
   };
-  initData: (payload: CategoryResponse) => void;
 }
 
-// currentUpdate: { id: 0, name: '' },
-//   data: { count: 0, rows: [] },
-
 export const createCategorySlice: StateCreator<CategorySlice> = (set) => ({
-  currentUpdate: { id: 0, name: '' },
-  data: { count: 0, rows: [] },
-  initData: (payload) => set(() => ({ data: payload })),
+  category: {
+    currentUpdate: { id: 0, name: '' },
+    response: { count: 0, rows: [] },
+    initData: (payload) => {
+      set((state) => ({
+        category: {
+          ...state.category,
+          response: payload,
+        },
+      }));
+    },
+  },
 });
-
-// export const createCategorySlice = create(
-//   combine(initialState, (set) => ({
-//     initData: (payload: CategoryResponse) => set(() => ({ data: payload })),
-//   }))
-// );
