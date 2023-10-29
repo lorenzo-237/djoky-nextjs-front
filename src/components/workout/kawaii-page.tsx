@@ -23,15 +23,12 @@ import fetchWorkout from '@/db/workouts/client/fetch-workout';
 import { PageNotFound } from '../pages';
 import WorkoutPostsIt from './modules/workout-posts-it';
 import WorkoutMultistep from './modules/workout-multistep';
-import { useFormMultiStepStore } from './modules/store/multistep.store';
 
 const KawaiiWorkoutPage = ({ id }: { id: number }) => {
   const [workout, setWorkout] = useState<Workout | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
-  const exercises = useFormMultiStepStore((state) => state.exercises);
-
-  console.log(exercises);
+  console.log('render once');
 
   useEffect(() => {
     const fetchData = async () => {
