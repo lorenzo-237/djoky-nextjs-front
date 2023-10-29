@@ -69,7 +69,7 @@ export default function ExerciseForm() {
       });
 
       addExercise(exercise);
-      addExerciseToGroup({ groupId: data.groupId, exercise: exercise });
+      addExerciseToGroup({ groupId: data.groupId, exercise: { ...exercise } });
     } catch (error: any) {
       setError(error.message.toString());
       toast({
