@@ -68,6 +68,7 @@ type WorkoutExercise = {
   id: number;
   name: string;
   description: string;
+  timed: boolean;
   group: {
     id: number;
     name: string;

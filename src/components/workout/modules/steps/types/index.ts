@@ -1,3 +1,3 @@
-export type CheckExercise = Exercise & {
+export type CheckExercise = WorkoutExercise & {
   checked: boolean;
 };
