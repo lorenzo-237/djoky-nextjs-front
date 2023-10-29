@@ -1,6 +1,5 @@
 'use client';
-
-import { useBoundStore } from '@/stores/store';
+import useCategoryStore from '@/stores/category.store';
 import { useEffect } from 'react';
 
 export type DataProps = {
@@ -12,7 +11,7 @@ export type DataProps = {
 type AppProps = { data: DataProps | null; children: JSX.Element };
 
 export const DataLoading = ({ data, children }: AppProps) => {
-  const { initData: initCategory } = useBoundStore((state) => state.category);
+  const initCategory = useCategoryStore((state) => state.initData);
 
   useEffect(() => {
     console.log('\x1b[36m%s\x1b[0m', 'data fetched init datas');
