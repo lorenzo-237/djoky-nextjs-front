@@ -14,19 +14,17 @@ import {
   Stack,
 } from '@chakra-ui/react';
 import { FormEvent, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { addGroup } from '@/reducers/group.slice';
 import { createNewGroup } from '@/db/groups';
-import { RootState } from '@/app/store';
+import { useCategoryStore, useGroupStore } from '@/stores';
 
 export default function GroupForm() {
   const [groupName, setGroupName] = useState<string>('');
   const [categoryId, setCategoryId] = useState<number>(0);
   const [error, setError] = useState<string | null>(null);
   const toast = useToast();
-  const dispatch = useDispatch();
 
-  const categories = useSelector((state: RootState) => state.category.data);
+  const addGroup = useGroupStore((state) => state.add);
+  const categories = useCategoryStore((state) => state.response);
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
@@ -59,7 +57,7 @@ export default function GroupForm() {
         isClosable: true,
       });
 
-      dispatch(addGroup(group));
+      addGroup(group);
     } catch (error: any) {
       setError(error.message.toString());
       toast({

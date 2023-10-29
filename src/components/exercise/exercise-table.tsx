@@ -22,31 +22,33 @@ import {
 } from '@chakra-ui/react';
 import { EditIcon, CheckIcon, TimeIcon } from '@chakra-ui/icons';
 import { GiWeight, GiHourglass } from 'react-icons/gi';
-import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '@/app/store';
-import { UpdateDto, pending, setCurrentUpdate, validate } from '@/reducers/exercise.slice';
 import { pendingExercise, validateExercise } from '@/db/exercises';
 import { useRef, useState } from 'react';
 import { ExerciseUpdateModal } from './modules';
+import { useExerciseStore, useGroupStore } from '@/stores';
+import { UpdateExerciseDto } from '@/stores/exercise.store';
 
 export default function ExerciseTable() {
-  const { count, rows } = useSelector((state: RootState) => state.exercise.data);
-  const groups = useSelector((state: RootState) => state.group.data);
+  const { count, rows } = useExerciseStore((state) => state.response);
+  const setCurrentUpdate = useExerciseStore((state) => state.setCurrentUpdate);
+  const validate = useExerciseStore((state) => state.validate);
+  const pending = useExerciseStore((state) => state.pending);
+  const groups = useGroupStore((state) => state.response);
+
   const [groupId, setGroupId] = useState<number>(0);
-  const dispatch = useDispatch();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const updateBtnRef = useRef(null);
 
-  const handleEdit = (editDto: UpdateDto) => {
-    dispatch(setCurrentUpdate(editDto));
+  function handleEdit(editDto: UpdateExerciseDto) {
+    setCurrentUpdate(editDto);
     onOpen();
-  };
+  }
 
   const handleValidate = async (id: number) => {
     try {
       await validateExercise(id);
-      dispatch(validate(id));
+      validate(id);
     } catch (error) {
       console.error(error);
     }
@@ -55,7 +57,7 @@ export default function ExerciseTable() {
   const handlePending = async (id: number) => {
     try {
       await pendingExercise(id);
-      dispatch(pending(id));
+      pending(id);
     } catch (error) {
       console.error(error);
     }

@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { combine } from 'zustand/middleware';
 
-type UpdateExerciseDto = {
+export type UpdateExerciseDto = {
   id: number;
   name: string;
   description: string;

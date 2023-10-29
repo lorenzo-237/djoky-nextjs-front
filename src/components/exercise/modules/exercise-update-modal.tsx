@@ -3,10 +3,8 @@
 import { Button, FormControl, FormLabel, Input, Radio, RadioGroup, Select, Stack, Textarea } from '@chakra-ui/react';
 import React, { useEffect, useRef, useState } from 'react';
 import { DefaultModal } from '../../structure';
-import { RootState } from '@/app/store';
-import { useSelector, useDispatch } from 'react-redux';
 import { updateExercise } from '@/db/exercises';
-import { update } from '@/reducers/exercise.slice';
+import { useExerciseStore, useGroupStore } from '@/stores';
 
 export interface ExerciseUpdateModalProps {
   isOpen: boolean;
@@ -22,9 +20,9 @@ const initialState = {
 
 export default function ExerciseUpdateModal({ isOpen, onClose, finalRef }: ExerciseUpdateModalProps) {
   const initialRef = useRef(null);
-  const { id, name, description, timed, group } = useSelector((state: RootState) => state.exercise.currentUpdate);
-  const dispatch = useDispatch();
-  const groups = useSelector((state: RootState) => state.group.data);
+  const { id, name, description, timed, group } = useExerciseStore((state) => state.currentUpdate);
+  const update = useExerciseStore((state) => state.update);
+  const groups = useGroupStore((state) => state.response);
   const [state, setState] = useState(initialState);
   const [type, setType] = useState('0');
 
@@ -40,15 +38,13 @@ export default function ExerciseUpdateModal({ isOpen, onClose, finalRef }: Exerc
   const handleUpdate = async () => {
     try {
       const exercise = await updateExercise(id, { ...state, timed: type === '1' });
-      dispatch(
-        update({
-          id: exercise.id,
-          name: exercise.name,
-          description: exercise.description,
-          timed: exercise.timed,
-          group: exercise.group,
-        })
-      );
+      update({
+        id: exercise.id,
+        name: exercise.name,
+        description: exercise.description,
+        timed: exercise.timed,
+        group: exercise.group,
+      });
       onClose();
     } catch (error) {
       console.error(error);

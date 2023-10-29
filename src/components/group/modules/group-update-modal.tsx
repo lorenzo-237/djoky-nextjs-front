@@ -3,11 +3,8 @@
 import { Button, FormControl, FormLabel, Input, Select, Stack } from '@chakra-ui/react';
 import React, { useEffect, useRef, useState } from 'react';
 import { DefaultModal } from '../../structure';
-import { RootState } from '@/app/store';
-import { useSelector, useDispatch } from 'react-redux';
 import { updateGroup } from '@/db/groups';
-import { update } from '@/reducers/group.slice';
-import { refreshGroup } from '@/reducers/exercise.slice';
+import { useCategoryStore, useExerciseStore, useGroupStore } from '@/stores';
 
 export interface GroupUpdateModalProps {
   isOpen: boolean;
@@ -17,13 +14,14 @@ export interface GroupUpdateModalProps {
 
 export default function GroupUpdateModal({ isOpen, onClose, finalRef }: GroupUpdateModalProps) {
   const initialRef = useRef(null);
-  const { id, name, category } = useSelector((state: RootState) => state.group.currentUpdate);
+  const { id, name, category } = useGroupStore((state) => state.currentUpdate);
+  const update = useGroupStore((state) => state.update);
+  const refreshGroup = useExerciseStore((state) => state.refreshGroup);
   const [state, setState] = useState({
     name: '',
     categoryId: 0,
   });
-  const dispatch = useDispatch();
-  const categories = useSelector((state: RootState) => state.category.data);
+  const categories = useCategoryStore((state) => state.response);
 
   useEffect(() => {
     setState({ name: name, categoryId: category.id });
@@ -32,8 +30,8 @@ export default function GroupUpdateModal({ isOpen, onClose, finalRef }: GroupUpd
   const handleUpdate = async () => {
     try {
       const group = await updateGroup(id, state.name, state.categoryId);
-      dispatch(update({ id: group.id, name: group.name, category: group.category }));
-      dispatch(refreshGroup({ groupId: group.id, groupName: group.name }));
+      update({ id: group.id, name: group.name, category: group.category });
+      refreshGroup({ groupId: group.id, groupName: group.name });
       onClose();
     } catch (error) {
       console.error(error);
