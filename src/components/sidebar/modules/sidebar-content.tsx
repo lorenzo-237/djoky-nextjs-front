@@ -21,7 +21,14 @@ export default function SidebarContent({ onClose, ...rest }: SidebarProps) {
       {...rest}
     >
       <Flex h='20' alignItems='center' mx='8' justifyContent='space-between'>
-        <Link href='/' fontSize='2xl' fontFamily='monospace' fontWeight='bold' style={{ textDecoration: 'none' }}>
+        <Link
+          href='/'
+          fontSize='2xl'
+          fontFamily='monospace'
+          color='purple.500'
+          fontWeight='bold'
+          style={{ textDecoration: 'none' }}
+        >
           Djoky
         </Link>
         <ToggleColorMode />
@@ -42,11 +49,11 @@ function ToggleColorMode() {
 
   return colorMode === 'light' ? (
     <Tooltip label='éteindre la luz'>
-      <MoonIcon onClick={toggleColorMode} cursor='pointer' />
+      <MoonIcon onClick={toggleColorMode} cursor='pointer' color='purple.500' />
     </Tooltip>
   ) : (
     <Tooltip label='allumer la luz'>
-      <SunIcon onClick={toggleColorMode} cursor='pointer' />
+      <SunIcon onClick={toggleColorMode} cursor='pointer' color='purple.500' />
     </Tooltip>
   );
 }

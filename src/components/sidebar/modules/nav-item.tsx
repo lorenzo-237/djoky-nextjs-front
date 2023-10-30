@@ -20,7 +20,7 @@ export default function NavItem({ url, icon, children, ...rest }: NavItemProps) 
         role='group'
         cursor='pointer'
         _hover={{
-          bg: isLogoutLink ? 'red.500' : 'blue.500',
+          bg: isLogoutLink ? 'red.500' : 'purple.500',
           color: 'white',
         }}
         color={isLogoutLink ? 'red.500' : ''}
