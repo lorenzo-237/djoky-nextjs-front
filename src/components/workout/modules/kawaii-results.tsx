@@ -1,7 +1,19 @@
 'use client';
 
 import React from 'react';
-import { Card, Text, VStack, HStack, Badge, CardBody, Wrap, WrapItem, Tag, IconButton } from '@chakra-ui/react';
+import {
+  Card,
+  Text,
+  VStack,
+  HStack,
+  Badge,
+  CardBody,
+  Wrap,
+  WrapItem,
+  Tag,
+  IconButton,
+  useColorModeValue,
+} from '@chakra-ui/react';
 import { formatDateToCustomFormat } from '@/utils/functions/convert';
 import { AddIcon, DeleteIcon, ViewIcon } from '@chakra-ui/icons';
 import Link from 'next/link';
@@ -15,6 +27,8 @@ import Link from 'next/link';
 export default function KawaiiResults({ workouts }: { workouts: Workout[] }) {
   const displayedGroups = new Set();
 
+  const bgColor = useColorModeValue('white', 'gray.900');
+
   return (
     <VStack spacing={4} align='start'>
       {workouts.map((workouts) => (
@@ -22,7 +36,7 @@ export default function KawaiiResults({ workouts }: { workouts: Workout[] }) {
           key={workouts.id}
           w='full'
           borderWidth='1px'
-          borderColor='white'
+          borderColor={bgColor}
           _hover={{
             borderColor: 'purple.400',
             boxShadow: 'lg',
