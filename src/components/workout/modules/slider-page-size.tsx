@@ -16,7 +16,7 @@ function SliderPageSize({
       defaultValue={pageSize}
       min={1}
       max={50}
-      colorScheme='blue'
+      colorScheme='purple'
       onChange={(v) => setPageSize(v)}
       onMouseEnter={() => setShowTooltip(true)}
       onMouseLeave={() => setShowTooltip(false)}
@@ -33,7 +33,7 @@ function SliderPageSize({
       <SliderTrack>
         <SliderFilledTrack />
       </SliderTrack>
-      <Tooltip hasArrow bg='blue.500' color='white' placement='top' isOpen={showTooltip} label={`${pageSize}`}>
+      <Tooltip hasArrow bg='purple.500' color='white' placement='top' isOpen={showTooltip} label={`${pageSize}`}>
         <SliderThumb />
       </Tooltip>
     </Slider>

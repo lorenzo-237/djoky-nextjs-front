@@ -122,7 +122,7 @@ function WorkoutList() {
     <VStack spacing={4} align='stretch'>
       <Card w='full'>
         <CardHeader>
-          <Button colorScheme='blue' variant='link' onClick={() => setFilterOpen((prev) => !prev)}>
+          <Button colorScheme='purple' variant='link' onClick={() => setFilterOpen((prev) => !prev)}>
             {`${filterOpen ? 'Masquer les filtres' : 'Afficher les filtres'}`}
           </Button>
         </CardHeader>
@@ -136,7 +136,7 @@ function WorkoutList() {
                     <Input
                       type='date'
                       name='min'
-                      colorScheme='blue'
+                      focusBorderColor='purple.500'
                       value={dateRange.min}
                       onChange={handleDateChange}
                     />
@@ -146,7 +146,7 @@ function WorkoutList() {
                     <Input
                       type='date'
                       name='max'
-                      colorScheme='blue'
+                      focusBorderColor='purple.500'
                       value={dateRange.max}
                       onChange={handleDateChange}
                     />
@@ -158,7 +158,7 @@ function WorkoutList() {
                 </FormControl>
                 <Button
                   type='submit'
-                  colorScheme='blue'
+                  colorScheme='purple'
                   leftIcon={<Search2Icon />}
                   title='Rechercher des workouts dans la période sélectionnée'
                 >
@@ -174,17 +174,15 @@ function WorkoutList() {
   );
 }
 
-function WorkoutsListAndPagination({
-  loading,
-  data,
-  filter,
-  handlePageChange,
-}: {
+type WorkoutsListAndPaginationProps = {
   loading: boolean;
   data: WorkoutResponse;
   filter: PageFilterType;
   handlePageChange: (newPage: number) => void;
-}) {
+};
+
+function WorkoutsListAndPagination(props: WorkoutsListAndPaginationProps) {
+  const { loading, data, handlePageChange } = props;
   // https://www.iconfinder.com/Rudityas
   if (data.page === 0) {
     return (
@@ -192,7 +190,7 @@ function WorkoutsListAndPagination({
         <Center>
           <Image src='./assets/cute_choper.png' alt='Cute Choper' />
         </Center>
-        <Text fontSize={['2xl', '4xl']} color='blue.700' fontWeight='bold'>
+        <Text fontSize={['2xl', '4xl']} color='purple.700' fontWeight='bold'>
           Effectuez une recherche !
         </Text>
       </VStack>
@@ -219,7 +217,7 @@ function WorkoutsListAndPagination({
         <Center>
           <Image src='./assets/cute_psykokwak.png' alt='Cute Psykokwak' />
         </Center>
-        <Text fontSize={['2xl', '4xl']} color='blue.700' fontWeight='bold'>
+        <Text fontSize={['2xl', '4xl']} color='purple.700' fontWeight='bold'>
           ¿ Pas de résultats ?
         </Text>
       </VStack>
@@ -230,39 +228,43 @@ function WorkoutsListAndPagination({
     <>
       <Text fontSize='lg' as='b'>{`${data.count} résultat${data.count > 1 ? 's' : ''}`}</Text>
       <KawaiiResults workouts={data.rows} />
-
-      <Stack justify='center' align='center' direction='row' spacing={4}>
-        <Tooltip label={`Page précédente`} openDelay={500}>
-          <IconButton
-            isRound={true}
-            variant='solid'
-            aria-label='précédent'
-            colorScheme='blue'
-            onClick={() => handlePageChange(filter.page - 1)}
-            isDisabled={loading || filter.page <= 1}
-            icon={<ChevronLeftIcon />}
-          />
-        </Tooltip>
-        <Tooltip label={`Vous êtes sur la page ${data.page}`} openDelay={500}>
-          <Text textDecoration='underline' fontWeight='bold' fontSize='xl'>
-            {data.page}
-          </Text>
-        </Tooltip>
-        <Tooltip label={`Page suivante`} openDelay={500}>
-          <IconButton
-            isRound={true}
-            variant='solid'
-            aria-label='suivant'
-            colorScheme='blue'
-            onClick={() => handlePageChange(filter.page + 1)}
-            isDisabled={loading || filter.page >= data.totalPage}
-            icon={<ChevronRightIcon />}
-          />
-        </Tooltip>
-      </Stack>
-
+      <PageNavigation {...props} />
       <PageNumbers currentPage={data.page} totalPage={data.totalPage} handlePageChange={handlePageChange} />
     </>
+  );
+}
+
+function PageNavigation({ loading, data, filter, handlePageChange }: WorkoutsListAndPaginationProps) {
+  return (
+    <Stack justify='center' align='center' direction='row' spacing={4}>
+      <Tooltip label={`Page précédente`} openDelay={500}>
+        <IconButton
+          isRound={true}
+          variant='solid'
+          aria-label='précédent'
+          colorScheme='purple'
+          onClick={() => handlePageChange(filter.page - 1)}
+          isDisabled={loading || filter.page <= 1}
+          icon={<ChevronLeftIcon />}
+        />
+      </Tooltip>
+      <Tooltip label={`Vous êtes sur la page ${data.page}`} openDelay={500}>
+        <Text textDecoration='underline' fontWeight='bold' fontSize='xl'>
+          {data.page}
+        </Text>
+      </Tooltip>
+      <Tooltip label={`Page suivante`} openDelay={500}>
+        <IconButton
+          isRound={true}
+          variant='solid'
+          aria-label='suivant'
+          colorScheme='purple'
+          onClick={() => handlePageChange(filter.page + 1)}
+          isDisabled={loading || filter.page >= data.totalPage}
+          icon={<ChevronRightIcon />}
+        />
+      </Tooltip>
+    </Stack>
   );
 }
 
@@ -287,7 +289,7 @@ function PageNumbers({
           return (
             <Fade key={page} in={currentPage === page}>
               <Tooltip label={`Vous êtes sur la page ${page}`} openDelay={500}>
-                <Button colorScheme='blue' variant={`${currentPage === page ? 'solid' : 'outline'}`}>
+                <Button colorScheme='purple' variant={`${currentPage === page ? 'solid' : 'outline'}`}>
                   {page}
                 </Button>
               </Tooltip>
@@ -297,7 +299,7 @@ function PageNumbers({
           return (
             <Tooltip key={page} label={`Aller sur la page ${page}`} openDelay={500}>
               <Button
-                colorScheme='blue'
+                colorScheme='purple'
                 variant={`${currentPage === page ? 'solid' : 'outline'}`}
                 onClick={() => handlePageChange(page)}
               >
