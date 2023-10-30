@@ -27,7 +27,7 @@ import Link from 'next/link';
 export default function KawaiiResults({ workouts }: { workouts: Workout[] }) {
   const displayedGroups = new Set();
 
-  const bgColor = useColorModeValue('white', 'gray.900');
+  const bgColor = useColorModeValue('white', 'gray.700');
 
   return (
     <VStack spacing={4} align='start'>
