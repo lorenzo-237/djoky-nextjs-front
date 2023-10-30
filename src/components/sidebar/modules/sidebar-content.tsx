@@ -1,8 +1,9 @@
 'use client';
 
-import { Box, Link, Flex, useColorModeValue, BoxProps, CloseButton } from '@chakra-ui/react';
+import { Box, Link, Flex, useColorModeValue, BoxProps, CloseButton, useColorMode, Tooltip } from '@chakra-ui/react';
 import { LinkItems } from '../constants';
 import { NavItem } from '.';
+import { MoonIcon, SunIcon } from '@chakra-ui/icons';
 
 interface SidebarProps extends BoxProps {
   onClose: () => void;
@@ -23,6 +24,7 @@ export default function SidebarContent({ onClose, ...rest }: SidebarProps) {
         <Link href='/' fontSize='2xl' fontFamily='monospace' fontWeight='bold' style={{ textDecoration: 'none' }}>
           Djoky
         </Link>
+        <ToggleColorMode />
         {/* for mobile */}
         <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
       </Flex>
@@ -32,5 +34,19 @@ export default function SidebarContent({ onClose, ...rest }: SidebarProps) {
         </NavItem>
       ))}
     </Box>
+  );
+}
+
+function ToggleColorMode() {
+  const { colorMode, toggleColorMode } = useColorMode();
+
+  return colorMode === 'light' ? (
+    <Tooltip label='éteindre la luz'>
+      <MoonIcon onClick={toggleColorMode} cursor='pointer' />
+    </Tooltip>
+  ) : (
+    <Tooltip label='allumer la luz'>
+      <SunIcon onClick={toggleColorMode} cursor='pointer' />
+    </Tooltip>
   );
 }
